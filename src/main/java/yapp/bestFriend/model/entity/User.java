@@ -4,14 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(name = "users")
 public class User extends BaseTime {
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +21,22 @@ public class User extends BaseTime {
 
     private String nickName;
 
-    private String token;
-
     @Builder
     public User(Long id, String email, String password, String nickName){
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickName = nickName;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nickName='" + nickName + '\'' +
+                super.toString()+
+                '}';
     }
 }
