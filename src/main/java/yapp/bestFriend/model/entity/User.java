@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -39,4 +41,11 @@ public class User extends BaseTime {
                 super.toString()+
                 '}';
     }
+
+    // 2022-05-14 김유비
+    // User - Saving 일대다 단방향 연관관계 매핑
+    @OneToMany
+    @JoinColumn(name = "SAVING_ID")
+    private List<Saving> savingList = new ArrayList<Saving>();
+
 }
