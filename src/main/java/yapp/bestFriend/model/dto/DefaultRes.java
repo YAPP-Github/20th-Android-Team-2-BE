@@ -26,10 +26,11 @@ public class DefaultRes<T> {
                 .build();
     }
 
-    // 상태 코드 + 응답 데이터 반환
-    public static <T> DefaultRes<T> response(final Integer statusCode, final T data){
+    // 상태 코드 + 부가 설명 + 응답 데이터 반환
+    public static <T> DefaultRes<T> response(final Integer statusCode, final String Message, final T data){
         return (DefaultRes<T>)DefaultRes.builder()
                 .statusCode(statusCode)
+                .Message(Message)
                 .data(data)
                 .build();
     }
