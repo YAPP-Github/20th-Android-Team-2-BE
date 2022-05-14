@@ -1,5 +1,6 @@
 package yapp.bestFriend.model.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,6 +40,7 @@ public class SavingRecord extends BaseTime {
         this.user = user;
     }
 
+    @Builder
     public SavingRecord(Product product, User user){
         this.product = product;
         this.user = user;
