@@ -15,6 +15,7 @@ import java.util.List;
 public class User extends BaseTime {
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     private String email;
@@ -38,14 +39,12 @@ public class User extends BaseTime {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
-                super.toString()+
+                super.toString() +
                 '}';
     }
 
-    // 2022-05-14 김유비
-    // User - Saving 일대다 단방향 연관관계 매핑
-    @OneToMany
-    @JoinColumn(name = "SAVING_ID")
-    private List<Saving> savingList = new ArrayList<Saving>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Product> productList = new ArrayList<Product>();
 
 }
