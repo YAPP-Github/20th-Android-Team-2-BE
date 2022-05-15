@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -53,6 +55,9 @@ public class User extends BaseTime {
                 super.toString() +
                 '}';
     }
+  
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Product> productList = new ArrayList<Product>();
 
     public void setRefreshToken(String refreshToken) {
         this.token = refreshToken;
