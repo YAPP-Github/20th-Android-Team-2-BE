@@ -28,4 +28,14 @@ public class OauthService {
                 .orElseThrow(() -> new IllegalArgumentException("알 수 없는 SocialLoginType 입니다."));
     }
 
+    public DefaultRes requestAccessToken(SocialLoginType socialLoginType, String code) {
+        SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
+
+        if(socialLoginType == SocialLoginType.KAKAO){
+            String token = socialOauth.requestAccessToken(code);
+            return kakaoOauth.requestAccessTokenUsingURL(token);
+        }
+
+        return DefaultRes.response(HttpStatus.OK.value(), "등록실패");
+    }
 }

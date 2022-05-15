@@ -34,4 +34,18 @@ public class OauthController {
 
         return new ResponseEntity<>(oauthService.request(socialLoginType), HttpStatus.OK);
     }
+
+    /**
+     * Social Login API Server 요청에 의한 callback 을 처리
+     * @param socialLoginType (GOOGLE, FACEBOOK)
+     * @param code API Server 로부터 넘어노는 code
+     * @return SNS Login 요청 결과로 받은 Json 형태의 String 문자열 (access_token, refresh_token 등)
+     */
+    @GetMapping(value = "/callback/{socialLoginType}")
+    public ResponseEntity<DefaultRes> callback(
+            @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
+            @RequestParam(name = "code") String code) {
+        log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
+        return new ResponseEntity<>(oauthService.requestAccessToken(socialLoginType, code), HttpStatus.OK);
+    }
 }

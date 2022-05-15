@@ -9,10 +9,14 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UniqueEmail", columnNames = {"email"})
+        })
 public class User extends BaseTime {
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     private String email;
@@ -21,12 +25,22 @@ public class User extends BaseTime {
 
     private String nickName;
 
+    @Enumerated(EnumType.STRING)//DB로 저장할 떄 Enum 값을 어떤 형태로 저장할지 결정
+    private Role role;
+
+    private String token;
+
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = UserConnection.class)
+    @JoinColumn(name = "user_connection_id")
+    private UserConnection userConnection;
+
     @Builder
-    public User(Long id, String email, String password, String nickName){
-        this.id = id;
+    public User(String email, String password, String nickName, UserConnection userConnection, Role role) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
+        this.userConnection = userConnection;
+        this.role = role;
     }
 
     @Override
@@ -36,7 +50,15 @@ public class User extends BaseTime {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
-                super.toString()+
+                super.toString() +
                 '}';
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.token = refreshToken;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
