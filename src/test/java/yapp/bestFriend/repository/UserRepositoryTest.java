@@ -14,7 +14,7 @@ import yapp.bestFriend.model.entity.User;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
+        type = FilterType.ASSIGNABLE_TYPE, //클래스를 기준으로 객체를 가져온다. classes에 할당할 수 있는 클래스, 즉 상속이나 구현한 클래스까지 포함한다.
         classes = {JpaAuditingConfig.class, LoginUserAuditorAware.class}
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)//embeddedDatabase를 할지 안할지
@@ -56,7 +56,7 @@ class UserRepositoryTest {
         User saveUser = userRepository.save(user);
 
         //when
-        String result = userRepository.findByEmail("dkfk2685@naver.com").orElse(null);
+        String result = userRepository.findByEmail("dkfk2685@naver.com").getEmail();
 
         //then
         assertThat(result).isEqualTo(user.getEmail());
