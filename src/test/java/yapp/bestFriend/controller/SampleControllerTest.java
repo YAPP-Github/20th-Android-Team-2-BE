@@ -4,9 +4,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import yapp.bestFriend.service.user.UserDetailsService;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -22,19 +26,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *  - Spring Security의 테스트도 지원한다.
  *  - @WebMvcTest를 사용하기 위해 테스트할 특정 컨트롤러 클래스를 명시하도록 한다
  */
-@WebMvcTest
+@WebMvcTest(controllers = SampleController.class)
 class SampleControllerTest {
 
     @Autowired
     MockMvc mvc;
 
+    @MockBean
+    UserDetailsService userDetailsService;
+
+    @MockBean
+    PasswordEncoder passwordEncoder;
+
     @Test
     @DisplayName("샘플 응답 Test")
-    public void sample_response_test() throws Exception {
+    public void socialLoginType() throws Exception {
         mvc.perform(get("/sample")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message", equalTo("정상")))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("샘플 파라미터 있는 Test")
+    public void sample_response_param_test() throws Exception {
+        String email = "dkfk2685@naver.com";
+        String password = "1234";
+
+        mvc.perform(get("/sample/param")
+                    .param("email", email)
+                    .param("password", password))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email", is(email)))
+                .andExpect(jsonPath("$.data.password", is(password)));
     }
 }
