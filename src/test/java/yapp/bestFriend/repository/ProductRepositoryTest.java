@@ -5,14 +5,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import yapp.bestFriend.config.JpaAuditingConfig;
+import yapp.bestFriend.config.LoginUserAuditorAware;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@DataJpaTest
+@DataJpaTest(includeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE, //클래스를 기준으로 객체를 가져온다. classes에 할당할 수 있는 클래스, 즉 상속이나 구현한 클래스까지 포함한다.
+        classes = {JpaAuditingConfig.class, LoginUserAuditorAware.class}
+))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductRepositoryTest {
 
@@ -24,7 +30,7 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("절약 정보 저장하기")
-    @Rollback(false)
+    //@Rollback(false)
     void save(){
         //given
         User user = User.builder()

@@ -1,5 +1,6 @@
 package yapp.bestFriend.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,21 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    private User user;
+
+    @BeforeEach
+    void beforeEach(){
+        //given
+        user = User.builder()
+                .nickName("test1")
+                .email("test@naver.com")
+                .password("123456")
+                .build();
+    }
+
     @Test
     @DisplayName("회원 저장하기")
     void save(){
-        //given
-        User user = User.builder()
-                .nickName("IceChoco")
-                .email("dkfk2685@naver.com")
-                .password("123456")
-                .build();
 
         //when
         User saveUser = userRepository.save(user);
@@ -46,19 +53,25 @@ class UserRepositoryTest {
     @Test
     @DisplayName("이메일로 회원 찾기")
     void findByEmail(){
-        //given
-        User user = User.builder()
-                .nickName("IceChoco")
-                .email("dkfk2685@naver.com")
-                .password("123456")
-                .build();
 
         User saveUser = userRepository.save(user);
 
         //when
-        String result = userRepository.findByEmail("dkfk2685@naver.com").getEmail();
+        String result = userRepository.findByEmail("test@naver.com").getEmail();
 
         //then
         assertThat(result).isEqualTo(user.getEmail());
+    }
+
+    @Test
+    @DisplayName("생성시간 수정시간 자동생성 확인 테스트")
+    void check_created_updated_at() {
+
+        //when
+        User saveUser = userRepository.save(user);
+
+        //then
+        assertThat(user.getCreateAt()).isNotNull();
+        assertThat(user.getUpdatedAt()).isNotNull();
     }
 }
