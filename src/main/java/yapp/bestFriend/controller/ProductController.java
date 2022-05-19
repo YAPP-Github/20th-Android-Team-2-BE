@@ -28,7 +28,7 @@ public class ProductController {
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "1. 등록 성공 \t\n 2. 등록 실패(사용자 정보 없음) \t\n"),
     })
-    @PostMapping("/products")
+    @PostMapping(value = "/products")
     public ResponseEntity<DefaultRes> createProduct(@Valid @RequestBody CreateProductRequest request){
         return new ResponseEntity<>(productService.createProduct(request), HttpStatus.OK);
     }

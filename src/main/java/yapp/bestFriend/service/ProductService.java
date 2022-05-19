@@ -22,7 +22,8 @@ public class ProductService {
         Optional<User> user = userRepository.findById(request.getUserId());
 
         if(user.isPresent()){
-            productRepository.save(request.toEntity(user.get()));
+            user.get().getProductList().add(productRepository.save(request.toEntity(user.get())));
+
             return DefaultRes.response(HttpStatus.OK.value(), "등록 성공");
         }
         else return DefaultRes.response(HttpStatus.OK.value(), "등록 실패(사용자 정보 없음)");
