@@ -37,6 +37,9 @@ dependencies {
 	//forTest
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+	//for Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
