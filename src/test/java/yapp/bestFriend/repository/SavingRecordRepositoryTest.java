@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.test.annotation.Rollback;
 import yapp.bestFriend.config.JpaAuditingConfig;
 import yapp.bestFriend.config.LoginUserAuditorAware;
 import yapp.bestFriend.model.entity.Product;
@@ -39,7 +40,6 @@ class SavingRecordRepositoryTest {
         //given
         User user = User.builder()
                 .nickName("kimyubi")
-                .email("kimyubi@gmail.com")
                 .password("password")
                 .build();
 
