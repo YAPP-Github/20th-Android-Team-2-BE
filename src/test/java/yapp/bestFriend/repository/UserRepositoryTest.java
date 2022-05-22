@@ -71,7 +71,8 @@ class UserRepositoryTest {
         User saveUser = userRepository.save(user);
 
         //then
-        assertThat(user.getCreateAt()).isNotNull();
-        assertThat(user.getUpdatedAt()).isNotNull();
+        assertThat(saveUser.getCreate_at()).isNotNull();
+        assertThat(saveUser.getUpdated_at()).isNotNull();
+
     }
 }
