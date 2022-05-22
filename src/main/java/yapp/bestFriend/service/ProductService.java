@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CreateProductRequest;
+import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 import yapp.bestFriend.model.dto.response.SimpleProductResponse;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
@@ -55,5 +56,24 @@ public class ProductService {
         
         // 해당 userId로 가입된 사용자가 존재하지 않는 경우
         else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
+    }
+
+    public DefaultRes updateProduct(UpdateProductRequest request) {
+        Optional<User> user = userRepository.findById(request.getUserId());
+
+        if(user.isPresent()){
+            Optional<Product> product = productRepository.findById(request.getProductId());
+
+            if(product.isPresent()){
+                Product updatedProduct = product.get().updateBoard(request);
+                productRepository.save(updatedProduct);
+
+                return DefaultRes.response(HttpStatus.OK.value(), "수정 성공");
+            }
+
+            else return DefaultRes.response(HttpStatus.OK.value(), "수정 실패(절약 정보 없음)");
+        }
+
+        else return DefaultRes.response(HttpStatus.OK.value(), "수정 실패(사용자 정보 없음)");
     }
 }

@@ -1,13 +1,13 @@
 package yapp.bestFriend.service;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CreateProductRequest;
 import yapp.bestFriend.model.entity.Product;
-import yapp.bestFriend.model.entity.User;
+
 import yapp.bestFriend.repository.ProductRepository;
 import yapp.bestFriend.repository.UserRepository;
 
@@ -17,7 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 class ProductServiceTest {
 
     @Autowired
