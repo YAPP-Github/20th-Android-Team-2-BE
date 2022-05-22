@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CreateProductRequest;
+import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 import yapp.bestFriend.model.dto.response.SimpleProductResponse;
 import yapp.bestFriend.service.ProductService;
 import javax.validation.Valid;
@@ -40,4 +41,14 @@ public class ProductController {
     public ResponseEntity<DefaultRes<List<SimpleProductResponse>>> getProductList(@PathVariable("userId") Long userId){
         return new ResponseEntity<>(productService.getProductList(userId), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "절약 수정 API", notes = "절약을 수정할 때 사용되는 API입니다")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "1. 수정 성공 \t\n 2. 수정 실패(사용자 정보 없음) \t\n 3. 수정 실패(절약 정보 없음) \t\n"),
+    })
+    @PatchMapping (value = "/products")
+    public ResponseEntity<DefaultRes> updateProduct(@Valid @RequestBody UpdateProductRequest request){
+        return new ResponseEntity<>(productService.updateProduct(request), HttpStatus.OK);
+    }
+
 }

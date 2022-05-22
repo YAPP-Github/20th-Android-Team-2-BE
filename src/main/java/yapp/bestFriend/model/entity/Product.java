@@ -3,6 +3,7 @@ package yapp.bestFriend.model.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 
 import javax.persistence.*;
 
@@ -47,4 +48,11 @@ public class Product extends BaseTime {
         this.resolution = resolution;
     }
 
+    public Product updateBoard(UpdateProductRequest request) {
+        this.name = request.getName();
+        this.price = request.getPrice();
+        this.resolution = request.getResolution();
+
+        return this;
+    }
 }
