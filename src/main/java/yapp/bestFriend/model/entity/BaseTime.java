@@ -25,15 +25,16 @@ public abstract class BaseTime{
     // Entity가 생성되어 저장될 때 시간이 자동 저장됩니다.
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
 
     @CreatedBy
-    private Long createdId;
+    private Long createdBy;
 
     // 조회한 Entity 값을 변경할 때 시간이 자동 저장됩니다.
     @LastModifiedDate
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
     @LastModifiedBy
-    private Long updated_by;
+    private Long updatedBy;
+
 }
