@@ -58,7 +58,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @Rollback(false)
     @DisplayName("절약 수정하기")
     void updateProduct() throws Exception {
         mvc.perform(patch("/api/products")
@@ -70,6 +69,16 @@ class ProductControllerTest {
                                 "  \"price\": \"5500원\",\n" +
                                 "  \"resolution\": \"수정할래\"\n" +
                                 "}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Rollback(false)
+    @DisplayName("절약 삭제하기")
+    void deleteProduct() throws Exception {
+        Long userId = 35L;
+        Long productId = 65L;
+        mvc.perform(delete("/api/products/" + productId + "?userId=" +userId))
                 .andExpect(status().isOk());
     }
 }
