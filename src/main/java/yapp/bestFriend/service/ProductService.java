@@ -76,4 +76,22 @@ public class ProductService {
 
         else return DefaultRes.response(HttpStatus.OK.value(), "수정 실패(사용자 정보 없음)");
     }
+
+    public DefaultRes deleteProduct(Long productId, Long userId) {
+        Optional<Product> product = productRepository.findById(productId);
+
+        if(product.isPresent()){
+            Product existingProduct = product.get();
+            Long existingUserId = existingProduct.getUser().getId();
+
+            if(existingUserId.equals(userId)){
+                productRepository.delete(existingProduct);
+
+                return DefaultRes.response(HttpStatus.OK.value(), "삭제 성공");
+            }
+
+            else return DefaultRes.response(HttpStatus.OK.value(), "삭제 실패(사용자 정보 없음)");
+        }
+        else return DefaultRes.response(HttpStatus.OK.value(), "삭제 실패(절약 정보 없음)");
+    }
 }

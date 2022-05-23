@@ -14,6 +14,7 @@ import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 import yapp.bestFriend.model.dto.response.SimpleProductResponse;
 import yapp.bestFriend.service.ProductService;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Api(tags = {"절약 목록 API"})
@@ -49,6 +50,15 @@ public class ProductController {
     @PatchMapping (value = "/products")
     public ResponseEntity<DefaultRes> updateProduct(@Valid @RequestBody UpdateProductRequest request){
         return new ResponseEntity<>(productService.updateProduct(request), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "절약 삭제 API", notes = "절약을 삭제할 때 사용되는 API입니다")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "1. 삭제 성공 \t\n 2. 삭제 실패(사용자 정보 없음) \t\n 3. 삭제 실패(절약 정보 없음) \t\n"),
+    })
+    @DeleteMapping  (value = "/products/{productId}")
+    public ResponseEntity<DefaultRes> deleteProduct(@PathVariable("productId") Long productId, @RequestParam ("userId") Long userId){
+        return new ResponseEntity<>(productService.deleteProduct(productId, userId), HttpStatus.OK);
     }
 
 }
