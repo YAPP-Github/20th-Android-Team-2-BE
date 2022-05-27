@@ -7,6 +7,7 @@ import yapp.bestFriend.model.entity.User;
 import java.util.Arrays;
 import java.util.Collection;
 
+//일반 서비스의 사용자 객체를 Spring Security에서 사용하는 사용자 객체와 호환해주는 어댑터
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
     private final User user;
@@ -20,10 +21,13 @@ public class UserDetails implements org.springframework.security.core.userdetail
         return Arrays.asList(new SimpleGrantedAuthority(user.getRole().toString()));
     }
 
+    public long getUserId() {
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
-//        return "{noop}" + user.getPassword();
     }
 
     @Override
