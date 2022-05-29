@@ -11,7 +11,9 @@ import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.repository.ProductRepository;
 import yapp.bestFriend.repository.UserRepository;
+import yapp.bestFriend.repository.SavingRecordRepositoryCustom;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +24,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+
+    private final SavingRecordRepositoryCustom savingRecordRepositoryCustom;
 
     public DefaultRes createProduct(CreateProductRequest request) {
         Optional<User> user = userRepository.findById(request.getUserId());
@@ -47,7 +51,7 @@ public class ProductService {
             }
             else{
                 List<SimpleProductResponse> SimpleProductResponseList = productList.stream()
-                        .map(product -> new SimpleProductResponse(product.getId(), product.getName(), product.getPrice(), product.getResolution()))
+                        .map(product -> new SimpleProductResponse(product.getId(), product.getName(), product.getPrice(), product.getResolution(), savingRecordRepositoryCustom.isChecked(existingUser,LocalDate.now(),product), LocalDate.now()))
                         .collect(Collectors.toList());
 
                 return DefaultRes.response(HttpStatus.OK.value(), "조회성공", SimpleProductResponseList);
