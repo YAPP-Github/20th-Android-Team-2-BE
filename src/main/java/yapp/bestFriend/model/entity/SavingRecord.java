@@ -28,7 +28,6 @@ public class SavingRecord extends BaseTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @DateTimeFormat(pattern = "yyyymmdd")
     @CreatedDate
     private LocalDate record_ymd;
 

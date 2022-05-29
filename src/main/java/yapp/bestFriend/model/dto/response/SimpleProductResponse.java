@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -20,4 +23,10 @@ public class SimpleProductResponse {
 
     @ApiModelProperty(value = "다짐")
     private String resolution;
+
+    @ApiModelProperty(value = "당일 절약 완료 여부")
+    private boolean isChecked;
+
+    @ApiModelProperty(value = "Product GET API가 호출되었을때의 서버 시간")
+    private LocalDate today;
 }
