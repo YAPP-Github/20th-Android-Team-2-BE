@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.repository.UserRepository;
 
+import java.util.Optional;
+
+/**
+ * Spring security에서 로그인 할 때 전달된 정보를 기반으로 DB에서 유저를 가져오는 책임을 가지는 인터페이스
+ */
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
@@ -14,13 +19,14 @@ public class UserDetailsService implements org.springframework.security.core.use
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(name);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findById(Long.parseLong(username));
+
         if (user == null) {
             throw new UsernameNotFoundException("404 - User Not Found");
         }
 
-        return new yapp.bestFriend.service.user.UserDetails(user);
+        return new yapp.bestFriend.service.user.UserDetails(user.get());
     }
 
 }
