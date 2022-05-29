@@ -5,9 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.service.user.UserDetailsService;
 
 import static org.hamcrest.Matchers.is;
@@ -26,7 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *  - Spring Security의 테스트도 지원한다.
  *  - @WebMvcTest를 사용하기 위해 테스트할 특정 컨트롤러 클래스를 명시하도록 한다
  */
-@WebMvcTest(controllers = SampleController.class)
+@WebMvcTest(controllers = SampleController.class, includeFilters = {
+        // to include JwtUtil in spring context
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtUtil.class)})
 class SampleControllerTest {
 
     @Autowired
@@ -38,8 +44,12 @@ class SampleControllerTest {
     @MockBean
     PasswordEncoder passwordEncoder;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
     @Test
     @DisplayName("샘플 응답 Test")
+    @WithMockUser(roles = "USER")
     public void socialLoginType() throws Exception {
         mvc.perform(get("/sample")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -50,6 +60,7 @@ class SampleControllerTest {
 
     @Test
     @DisplayName("샘플 파라미터 있는 Test")
+    @WithMockUser(roles = "USER")
     public void sample_response_param_test() throws Exception {
         String email = "dkfk2685@naver.com";
         String password = "1234";

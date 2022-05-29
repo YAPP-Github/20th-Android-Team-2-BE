@@ -170,28 +170,32 @@ public class KakaoOauth implements SocialOauth {
 
                     userRepository.save(user);
 
-                    String accessToken = JwtUtil.createAccessToken(user.getId());
+                    String accessToken = JwtUtil.createAccessToken(user.getId());//신규토큰 생성
                     String refreshToken = JwtUtil.createRefreshToken(user.getId());
                     user.setRefreshToken(refreshToken);
 
                     return DefaultRes.response(HttpStatus.OK.value(), "등록성공", new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName()));
 
                 }else{
-                    info.setAccessToken(access_token);
-                    userConnectionRepository.save(info);
-
                     User userInfo = userRepository.findByEmail(email);
+                    String accessToken = "", refreshToken= "";
                     if(userInfo != null) {
-                        userInfo.setPassword(access_token);
+                        accessToken = JwtUtil.createAccessToken(userInfo.getId());//신규토큰 생성
+                        refreshToken = JwtUtil.createRefreshToken(userInfo.getId());//신규토큰 생성
+                        info.setAccessToken(accessToken);
+                        userConnectionRepository.save(info);
+
+                        userInfo.setPassword(accessToken);
+                        userInfo.setRefreshToken(refreshToken);
                         userRepository.save(userInfo);
                     }
 
-                    return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(access_token, userInfo.getToken(), userInfo.getId(), userInfo.getNickName()));
+                    return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, info.getId(), info.getNickName()));
                 }
             }
 
         } catch (IOException e) {
-            new IllegalArgumentException("알 수 없는 구글 로그인 Access Token 요청 URL 입니다 :: " + KAKAO_SNS_TOKEN_BASE_URL);
+            new IllegalArgumentException("알 수 없는 카카오 로그인 Access Token 요청 URL 입니다 :: " + KAKAO_SNS_TOKEN_BASE_URL);
         }
 
         return DefaultRes.response(HttpStatus.OK.value(), "등록수정실패");

@@ -5,9 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import yapp.bestFriend.model.entity.Role;
+import yapp.bestFriend.service.user.UserDetails;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Locale;
 
 public class JwtUtil {
 
@@ -27,6 +29,10 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    private enum Claim {
+        USER_PK
+    }
+
     //엑세스 토큰 발급
     public static String createAccessToken(Long userId){
 
@@ -40,7 +46,6 @@ public class JwtUtil {
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))
                 .signWith(key, SignatureAlgorithm.HS256) //암호화 알고리즘을 뭐로 할것인지
                 .compact();
-
     }
 
     //리프레쉬 토큰 발급
@@ -54,21 +59,46 @@ public class JwtUtil {
                 .claim("token_name", REFRESH_TOKEN_NAME)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key, SignatureAlgorithm.HS256) //암호화 알고리즘을 뭐로 할것인지
                 .compact();
 
     }
 
-    // 토큰의 유효성 + 만료일자 확인
-    public static Claims getClaims(String token) {
-        try{
-            return Jwts.parser()
-                    .setSigningKey(key)
-                    .parseClaimsJws(token)
-                    .getBody();
+    public Long getUserIdFromToken(String token) {
+        return getClaimValueFromToken(token, Claim.USER_PK.name().toLowerCase(Locale.ROOT), Long.class);
+    }
 
+    private <T> T getClaimValueFromToken(String token, String type, Class<T> requiredType) {
+        return getClaimsFromToken(token).get(type, requiredType);
+    }
+
+    // 토큰의 유효성 + 만료일자 확인
+    public static Claims getClaimsFromToken(String token) {
+        try{
+            return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build().parseClaimsJws(token)
+                    .getBody();
         }catch (Exception e){
             return null;
         }
     }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        Long userId = getUserIdFromToken(token);
+        return userId.equals(userDetails.getUserId()) && notExpiredToken(token);
+    }
+
+    public boolean notExpiredToken(String token) {
+        return !expiredToken(token);
+    }
+
+    public boolean expiredToken(String token) {
+        return getExpirationDateFromToken(token).before(new Date());
+    }
+
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimsFromToken(token).getExpiration();
+    }
+
 }

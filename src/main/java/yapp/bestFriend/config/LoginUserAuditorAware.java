@@ -5,7 +5,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import yapp.bestFriend.model.entity.User;
+import yapp.bestFriend.service.user.UserDetails;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class LoginUserAuditorAware implements AuditorAware<Long> {
                 || authentication.getPrincipal().equals(ANOYMOUS)) {
             return Optional.empty();
         }
-
-        return Optional.of(((User)authentication.getPrincipal()).getId());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return Optional.of(userDetails.getUserId());
     }
 }
