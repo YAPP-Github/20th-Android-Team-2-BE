@@ -3,6 +3,7 @@ package yapp.bestFriend.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = SampleController.class, includeFilters = {
         // to include JwtUtil in spring context
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtUtil.class)})
+@AutoConfigureMockMvc(addFilters = false)
 class SampleControllerTest {
 
     @Autowired
@@ -52,7 +54,7 @@ class SampleControllerTest {
     @WithMockUser(roles = "USER")
     public void socialLoginType() throws Exception {
         mvc.perform(get("/sample")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message", equalTo("정상")))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -66,8 +68,8 @@ class SampleControllerTest {
         String password = "1234";
 
         mvc.perform(get("/sample/param")
-                    .param("email", email)
-                    .param("password", password))
+                        .param("email", email)
+                        .param("password", password))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.email", is(email)))
                 .andExpect(jsonPath("$.data.password", is(password)));
