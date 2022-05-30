@@ -14,7 +14,6 @@ import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 import yapp.bestFriend.model.dto.response.SimpleProductResponse;
 import yapp.bestFriend.service.ProductService;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Api(tags = {"절약 목록 API"})
