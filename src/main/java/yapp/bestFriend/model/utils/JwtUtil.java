@@ -1,8 +1,6 @@
 package yapp.bestFriend.model.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import yapp.bestFriend.model.entity.Role;
 import yapp.bestFriend.service.user.UserDetails;
@@ -74,14 +72,10 @@ public class JwtUtil {
 
     // 토큰의 유효성 + 만료일자 확인
     public static Claims getClaimsFromToken(String token) {
-        try{
-            return Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build().parseClaimsJws(token)
-                    .getBody();
-        }catch (Exception e){
-            return null;
-        }
+                .getBody();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

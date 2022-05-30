@@ -28,13 +28,14 @@ public class SessionService {
         }
 
         String jwtToken = token.substring("Bearer ".length());
-        Claims claims = JwtUtil.getClaimsFromToken(jwtToken);
-        if (claims == null){
+        Claims claims;
+        try{
+            claims = JwtUtil.getClaimsFromToken(jwtToken);
+        }catch (Exception e){
             return DefaultRes.response(HttpStatus.UNAUTHORIZED.value(), "토큰불일치");
         }
 
         String tokenName = claims.get("token_name", String.class);
-        String userGrade = claims.get("user_grade", String.class);
 
         if(tokenName.equals(JwtUtil.REFRESH_TOKEN_NAME)){
 
@@ -56,12 +57,6 @@ public class SessionService {
     public Boolean refreshTokenCheck(Long id, String refreshToken){
         Optional<User> optionalUser = userRepository.findById(id);
 
-        return optionalUser.map(user -> {
-            if(user.getToken().equals(refreshToken)){
-                return true;
-            }else{
-                return false;
-            }
-        }).orElse(false);
+        return optionalUser.map(user -> user.getToken().equals(refreshToken)).orElse(false);
     }
 }
