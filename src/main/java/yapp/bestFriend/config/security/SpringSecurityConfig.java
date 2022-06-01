@@ -1,4 +1,4 @@
-package yapp.bestFriend.config;
+package yapp.bestFriend.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +35,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin().disable()
                 .csrf().disable() //csrf 공격으로부터 안전하고 매번 api 요청으로부터 csrf 토큰을 받지 않아도 되므로 disable 처리함
-                .cors().configurationSource(source())
-                .and().authorizeHttpRequests()
+                .cors().configurationSource(source()).and()
+                .authorizeHttpRequests() //인가에 대한 설정
                 .antMatchers("/api/oauth/**").permitAll()
                 .antMatchers("/api/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
@@ -73,8 +73,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         // swagger
         web.ignoring().antMatchers(
-                "/v2/api-docs",  "/configuration/ui",
+                "/v2/api-docs", "/configuration/ui",
                 "/swagger-resources", "/configuration/security",
-                "/swagger-ui.html", "/webjars/**","/swagger/**");
+                "/swagger-ui.html", "/webjars/**", "/swagger/**");
     }
 }
