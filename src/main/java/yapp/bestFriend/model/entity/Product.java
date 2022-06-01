@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Product extends BaseTime {
+public class Product extends BaseInfo {
 
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
