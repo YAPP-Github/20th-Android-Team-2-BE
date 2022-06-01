@@ -21,6 +21,10 @@ public class UserDetails implements org.springframework.security.core.userdetail
         return Arrays.asList(new SimpleGrantedAuthority(user.getRole().toString()));
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public long getUserId() {
         return user.getId();
     }
