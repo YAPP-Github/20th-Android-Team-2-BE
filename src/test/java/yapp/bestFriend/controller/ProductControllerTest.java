@@ -3,6 +3,7 @@ package yapp.bestFriend.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,9 +16,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import yapp.bestFriend.model.utils.JwtUtil;
+import yapp.bestFriend.model.utils.UserUtil;
 import yapp.bestFriend.service.ProductService;
 import yapp.bestFriend.service.user.UserDetailsService;
 
+import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,9 +67,15 @@ class ProductControllerTest {
     @DisplayName("절약 목록 조회하기")
     void getProductList() throws Exception {
         Long userId = 65L;
-        mvc.perform(get("/api/products/" + userId))
-                .andDo(print())
-                .andExpect(status().isOk());
+
+        //when
+        try (MockedStatic<UserUtil> mockedStatic = mockStatic(UserUtil.class)) {
+            mockedStatic.when(()-> UserUtil.getId()).thenReturn(userId);
+
+            mvc.perform(get("/api/products/").param("recordYmd","20220605"))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
     }
 
     @Test
@@ -88,9 +97,13 @@ class ProductControllerTest {
     @Rollback(false)
     @DisplayName("절약 삭제하기")
     void deleteProduct() throws Exception {
-        Long userId = 35L;
-        Long productId = 65L;
-        mvc.perform(delete("/api/products/" + productId + "?userId=" +userId))
-                .andExpect(status().isOk());
+
+        //when
+        try (MockedStatic<UserUtil> mockedStatic = mockStatic(UserUtil.class)) {
+            Long userId = 35L;
+            Long productId = 65L;
+            mvc.perform(delete("/api/products/" + productId + "?userId=" + userId))
+                    .andExpect(status().isOk());
+        }
     }
 }

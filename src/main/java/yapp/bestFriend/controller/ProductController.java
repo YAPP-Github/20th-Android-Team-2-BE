@@ -1,9 +1,6 @@
 package yapp.bestFriend.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +9,9 @@ import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CreateProductRequest;
 import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 import yapp.bestFriend.model.dto.response.SimpleProductResponse;
+import yapp.bestFriend.model.utils.UserUtil;
 import yapp.bestFriend.service.ProductService;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,9 +36,10 @@ public class ProductController {
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "1. 조회 성공 \t\n 2. 조회 실패(사용자 정보 없음) \t\n 3. 데이터 없음 \t\n"),
     })
-    @GetMapping(value = "/products/{userId}")
-    public ResponseEntity<DefaultRes<List<SimpleProductResponse>>> getProductList(@PathVariable("userId") Long userId){
-        return new ResponseEntity<>(productService.getProductList(userId), HttpStatus.OK);
+    @ApiImplicitParam(name = "recordYmd", value = "기록 일자(YYYYMMDD) ex)20220601", required = true, paramType = "query", defaultValue = "")
+    @GetMapping(value = "/products")
+    public ResponseEntity<DefaultRes<List<SimpleProductResponse>>> getProductList(@RequestParam("recordYmd") String recordYmd){
+        return new ResponseEntity<>(productService.getProductList(UserUtil.getId(), recordYmd), HttpStatus.OK);
     }
 
     @ApiOperation(value = "절약 수정 API", notes = "절약을 수정할 때 사용되는 API입니다")
@@ -56,8 +56,8 @@ public class ProductController {
             @ApiResponse(code = 200, message = "1. 삭제 성공 \t\n 2. 삭제 실패(사용자 정보 없음) \t\n 3. 삭제 실패(절약 정보 없음) \t\n"),
     })
     @DeleteMapping  (value = "/products/{productId}")
-    public ResponseEntity<DefaultRes> deleteProduct(@PathVariable("productId") Long productId, @RequestParam ("userId") Long userId){
-        return new ResponseEntity<>(productService.deleteProduct(productId, userId), HttpStatus.OK);
+    public ResponseEntity<DefaultRes> deleteProduct(@PathVariable("productId") Long productId){
+        return new ResponseEntity<>(productService.deleteProduct(productId, UserUtil.getId()), HttpStatus.OK);
     }
 
 }
