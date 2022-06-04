@@ -41,4 +41,7 @@ public abstract class BaseInfo {
 
     private boolean deletedYn = Boolean.FALSE;
 
+    public void delete() {
+        this.deletedYn = true;
+    }
 }
