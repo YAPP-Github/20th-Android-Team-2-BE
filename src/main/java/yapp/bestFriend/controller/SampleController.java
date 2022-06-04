@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.entity.User;
 
 @Api(tags = {"sample"})
 @RestController
 @Slf4j
+@ApiIgnore
 public class SampleController {
 
     @GetMapping("/sample")

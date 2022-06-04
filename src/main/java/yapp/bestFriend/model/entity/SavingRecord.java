@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class SavingRecord extends BaseTime {
+public class SavingRecord extends BaseInfo {
 
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +28,7 @@ public class SavingRecord extends BaseTime {
     private User user;
 
     @CreatedDate
-    private LocalDate record_ymd;
+    private LocalDate recordYmd;
 
     public void setProduct(Product product) {
         this.product = product;
@@ -40,8 +39,9 @@ public class SavingRecord extends BaseTime {
     }
 
     @Builder
-    public SavingRecord(Product product, User user){
+    public SavingRecord(Product product, User user, LocalDate recordYmd){
         this.product = product;
         this.user = user;
+        this.recordYmd= recordYmd;
     }
 }

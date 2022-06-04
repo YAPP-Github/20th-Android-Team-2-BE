@@ -52,6 +52,12 @@ dependencies {
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:5.0.0"
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
+
+	//model Mapper
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+	//static method 테스트를 위한 mockito-line 추가
+	testImplementation 'org.mockito:mockito-inline:3.11.2'
 }
 
 //querydsl 추가 시작

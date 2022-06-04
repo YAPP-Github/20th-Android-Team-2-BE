@@ -15,7 +15,7 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(name = "UniqueEmail", columnNames = {"email"})
         })
-public class User extends BaseTime {
+public class User extends BaseInfo {
     @Id //pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -30,19 +30,19 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)//DB로 저장할 떄 Enum 값을 어떤 형태로 저장할지 결정
     private Role role;
 
-    private String token;
+    private String token;//리프레시 토큰
 
     @OneToOne(fetch = FetchType.LAZY, targetEntity = UserConnection.class)
     @JoinColumn(name = "user_connection_id")
     private UserConnection userConnection;
 
     @Builder
-    public User(String email, String password, String nickName, UserConnection userConnection, Role role) {
+    public User(String email, String password, String nickName, Role role, UserConnection userConnection) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
-        this.userConnection = userConnection;
         this.role = role;
+        this.userConnection= userConnection;
     }
 
     @Override
@@ -59,11 +59,18 @@ public class User extends BaseTime {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private List<Product> productList = new ArrayList<Product>();
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<SavingRecord> savingList = new ArrayList<>();
+
     public void setRefreshToken(String refreshToken) {
         this.token = refreshToken;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setSavingRecord(List<SavingRecord> savingList){
+        this.savingList = savingList;
     }
 }
