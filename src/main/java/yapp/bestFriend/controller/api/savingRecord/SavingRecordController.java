@@ -38,7 +38,7 @@ public class SavingRecordController {
             @ApiResponse(code = 200, message = "1. 조회 성공 \t\n 2. 조회 실패(사용자 정보 없음) \t\n 3.조회실패(기록일자 파라미터 오류) \t\n 4. 데이터 없음 \t\n")
     })
     @GetMapping("/savingRecords")
-    @ApiImplicitParam(name = "recordMM", value = "기록 일자(YYYYMMDD) ex)202206", required = true, paramType = "query", defaultValue = "")
+    @ApiImplicitParam(name = "recordMM", value = "기록 일자(YYYYMM) ex)202206", required = true, paramType = "query", defaultValue = "")
     public ResponseEntity<DefaultRes<List<SavingRecordDto>>> getSavingList(@RequestParam("recordMM") String recordMM){
         return new ResponseEntity<>(savingRecordService.getSavingList(UserUtil.getId(), recordMM), HttpStatus.OK);
     }
