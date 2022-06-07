@@ -44,4 +44,8 @@ public abstract class BaseInfo {
     public void delete() {
         this.deletedYn = true;
     }
+
+    public void restore() {
+        this.deletedYn = false;
+    }
 }

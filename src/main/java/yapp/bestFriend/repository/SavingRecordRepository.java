@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import yapp.bestFriend.model.dto.res.SavingRecordSummaryInterface;
 import yapp.bestFriend.model.entity.SavingRecord;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -36,4 +37,6 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
             ")",
             nativeQuery = true)
     List<SavingRecordSummaryInterface> selectSummary(@Param(value = "fromDate") String fromDate, @Param(value = "toDate") String toDate, @Param(value = "userId") Long userId);
+
+    List<SavingRecord> findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate recordYmd, Long productId, Long userId, Boolean DeletedYn); // where name = ? and ranking = ?
 }

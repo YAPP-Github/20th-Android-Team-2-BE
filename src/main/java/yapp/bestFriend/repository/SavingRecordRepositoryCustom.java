@@ -27,7 +27,8 @@ public class SavingRecordRepositoryCustom {
                 .from(savingRecord)
                 .where(savingRecord.user.eq(existingUser)
                         .and(savingRecord.product.eq(product))
-                        .and(savingRecord.recordYmd.eq(now)))
+                        .and(savingRecord.recordYmd.eq(now))
+                        .and(savingRecord.deletedYn.eq(false)))
                 .fetchFirst();
 
         return fetchOne != null;

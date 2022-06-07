@@ -42,32 +42,58 @@ public class SavingRecordService {
             Optional<Product> product = productRepository.findById(request.getProductId());
             User existingUser = user.get();
 
-            if(product.isPresent()){
-                Product existingProduct = product.get();
-
-                boolean result = savingRecordRepositoryCustom.isChecked(existingUser, LocalDate.now(),existingProduct);
-
-                // 이미 체크 표시가 되어 있는 경우
-                if(result){
-                    // soft-delete로 리팩토링 해야 함
-                    return null;
-                }
-                else{
-                    SavingRecord savingRecord = SavingRecord.builder()
-                            .product(existingProduct)
-                            .user(existingUser)
-                            .build();
-
-                    savingRecordRepository.save(savingRecord);
-
-                    return DefaultRes.response(HttpStatus.OK.value(), "체크 성공");
-                }
+            if(!product.isPresent()){
+                return DefaultRes.response(HttpStatus.OK.value(), "체크 실패(절약 정보 없음)");
             }
 
-            else return DefaultRes.response(HttpStatus.OK.value(), "체크 실패(절약 정보 없음)");
+            Product existingProduct = product.get();
+
+            boolean result = savingRecordRepositoryCustom.isChecked(existingUser, LocalDate.now(), existingProduct);
+
+            // 이미 체크 표시가 되어 있는 경우
+            if(result){
+                return savingRecordSoftDelete(existingUser, existingProduct);
+            }
+            else{
+                List<SavingRecord> deletedList = savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), existingProduct.getId(), existingUser.getId(), true);
+
+                //product, 유저, 날짜로 이미 삭제했던 데이터가 있는 경우 true로 업데이트하여 복원
+                if(!deletedList.isEmpty()){
+                    return restoreSavingRecord(deletedList);
+                }
+
+                //없는 경우 신규 생성
+                SavingRecord savingRecord = SavingRecord.builder()
+                        .product(existingProduct)
+                        .user(existingUser)
+                        .build();
+
+                savingRecordRepository.save(savingRecord);
+
+                return DefaultRes.response(HttpStatus.OK.value(), "체크 성공");
+            }
+
         }
 
         else return DefaultRes.response(HttpStatus.OK.value(), "체크 실패(사용자 정보 없음)");
+    }
+
+    private DefaultRes<Object> restoreSavingRecord(List<SavingRecord> deletedList) {
+        for(SavingRecord sr: deletedList){
+            sr.restore();
+            savingRecordRepository.save(sr);
+        }
+        return DefaultRes.response(HttpStatus.OK.value(), "체크 성공");
+    }
+
+    private DefaultRes<Object> savingRecordSoftDelete(User existingUser, Product existingProduct) {
+        // 해당날짜, 상품id, 유저id, 삭제여부로 조회
+        List<SavingRecord> savingRecordList = savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), existingProduct.getId(), existingUser.getId(), false);
+        for(SavingRecord sr: savingRecordList){
+            sr.delete();
+            savingRecordRepository.save(sr);
+        }
+        return DefaultRes.response(HttpStatus.OK.value(), "체크 해제 성공");
     }
 
     public DefaultRes getSavingList(Long userId, String recordYmd) {
