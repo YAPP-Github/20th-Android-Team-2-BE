@@ -8,19 +8,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import yapp.bestFriend.model.dto.request.CheckProductRequest;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.SavingRecord;
 import yapp.bestFriend.model.entity.User;
+import yapp.bestFriend.repository.ProductRepository;
+import yapp.bestFriend.repository.SavingRecordRepository;
 import yapp.bestFriend.repository.SavingRecordRepositoryCustom;
 import yapp.bestFriend.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +34,12 @@ class SavingRecordServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private ProductRepository productRepository;
+
+    @Mock
+    private SavingRecordRepository savingRecordRepository;
+
+    @Mock
     private SavingRecordRepositoryCustom savingRecordRepositoryCustom;
 
     @InjectMocks
@@ -41,6 +47,7 @@ class SavingRecordServiceTest {
 
     private static List<SavingRecordDto> result;
     private static User user;
+    private static Product prodInput;
     private static String recordMM = "202206";
 
     @BeforeAll
@@ -54,7 +61,7 @@ class SavingRecordServiceTest {
                 .build();
 
         //given 2 - product 정보
-        Product prodInput = Product.builder().user(user)
+        prodInput = Product.builder().user(user)
                 .name("빙수")
                 .price("8000")
                 .resolution("더워도 참아")
@@ -80,6 +87,82 @@ class SavingRecordServiceTest {
                     .build()
             );
         }
+    }
+
+    @Test
+    @DisplayName("절약 기록 체크 API - 삭제했던 기록 다시 체크")
+    void recreateSavingRecord(){
+        //given
+        CheckProductRequest request = CheckProductRequest.builder()
+                .userId(user.getId())
+                .productId(user.getSavingList().get(0).getProduct().getId())
+                .today(LocalDate.now())
+                .build();
+
+        //when
+        doReturn(result).when(this.savingRecordRepositoryCustom)
+                .findByUserId(user, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")));
+        doReturn(false).when(this.savingRecordRepositoryCustom)
+                .isChecked(user, LocalDate.now(), prodInput);
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(productRepository.findById(request.getProductId())).thenReturn(Optional.ofNullable(prodInput));
+        when(savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
+                .thenReturn(user.getSavingList());
+
+        //then
+        assertThat(savingRecordService.checkProduct(request))
+                .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
+                .hasFieldOrPropertyWithValue("Message","체크 성공");
+    }
+
+    @Test
+    @DisplayName("절약 기록 체크 API - 기록 체크 해제")
+    void deleteSavingRecord(){
+        //given
+        CheckProductRequest request = CheckProductRequest.builder()
+                .userId(user.getId())
+                .productId(user.getSavingList().get(0).getProduct().getId())
+                .today(LocalDate.now())
+                .build();
+
+        //when
+        doReturn(result).when(this.savingRecordRepositoryCustom)
+                .findByUserId(user, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")));
+        doReturn(true).when(this.savingRecordRepositoryCustom)
+                .isChecked(user, LocalDate.now(), prodInput);
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(productRepository.findById(request.getProductId())).thenReturn(Optional.ofNullable(prodInput));
+        when(savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
+                .thenReturn(user.getSavingList());
+
+        //then
+        assertThat(savingRecordService.checkProduct(request))
+                .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
+                .hasFieldOrPropertyWithValue("Message","체크 해제 성공");
+    }
+
+    @Test
+    @DisplayName("절약 기록 체크 API - 기록 최초 등록")
+    void createNewSavingRecord(){
+        //given
+        CheckProductRequest request = CheckProductRequest.builder()
+                .userId(user.getId())
+                .productId(user.getSavingList().get(0).getProduct().getId())
+                .today(LocalDate.now())
+                .build();
+
+        //when
+        doReturn(result).when(this.savingRecordRepositoryCustom)
+                .findByUserId(user, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")));
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(productRepository.findById(request.getProductId())).thenReturn(Optional.ofNullable(prodInput));
+        when(savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
+                .thenReturn(Collections.emptyList());
+
+        //then
+        assertThat(savingRecordService.checkProduct(request))
+                .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
+                .hasFieldOrPropertyWithValue("Message","체크 성공");
     }
 
     @Test
@@ -110,4 +193,5 @@ class SavingRecordServiceTest {
                 .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
                 .hasFieldOrPropertyWithValue("Message","조회실패(기록일자 파라미터 오류)");
     }
+
 }
