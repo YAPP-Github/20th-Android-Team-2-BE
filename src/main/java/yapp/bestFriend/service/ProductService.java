@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CreateProductRequest;
 import yapp.bestFriend.model.dto.request.UpdateProductRequest;
-import yapp.bestFriend.model.dto.response.SimpleProductResponse;
+import yapp.bestFriend.model.dto.res.SimpleProductResponse;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.repository.ProductRepository;
