@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CheckProductRequest;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
+import yapp.bestFriend.model.dto.res.SavingRecordSummaryDto;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.SavingRecord;
 import yapp.bestFriend.model.entity.User;
@@ -14,10 +15,14 @@ import yapp.bestFriend.repository.SavingRecordRepository;
 import yapp.bestFriend.repository.SavingRecordRepositoryCustom;
 import yapp.bestFriend.repository.UserRepository;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,5 +102,53 @@ public class SavingRecordService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public DefaultRes getSavingSummary(long userId, String recordMM) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(!checkDate(recordMM)){
+            return DefaultRes.response(HttpStatus.OK.value(), "조회실패(기록일자 파라미터 오류)");
+        }
+
+        //해당 userId로 가입된 사용자가 존재하는 경우
+        if(user.isPresent()){
+            //한달 전
+            String prevMM = AddDate(recordMM+"01", 0, -1, 0);
+            String fromDate = prevMM.substring(0,4)+"-"+prevMM.substring(4,6);
+            String toDate = recordMM.substring(0,4)+"-"+recordMM.substring(4,6);
+
+            // 각 절약 항목별로 직전월 대비 횟수를 보여준다.
+            List<SavingRecordSummaryDto> savingRecordSummaryList = savingRecordRepository.selectSummary(fromDate, toDate, userId)
+                    .stream()
+                    .map(SavingRecordSummaryDto::new)
+                    .collect(Collectors.toList());
+
+            if(savingRecordSummaryList.isEmpty()){
+                return DefaultRes.response(HttpStatus.OK.value(), "데이터 없음");
+            }else{
+                return DefaultRes.response(HttpStatus.OK.value(), "조회성공", savingRecordSummaryList);
+            }
+        }
+        // 해당 userId로 가입된 사용자가 존재하지 않는 경우
+        else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
+    }
+
+    private static String AddDate(String strDate, int year, int month, int day) {
+        SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMMdd");
+
+        Calendar cal = Calendar.getInstance();
+        try{
+            Date dt = dtFormat.parse(strDate);
+            cal.setTime(dt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        cal.add(Calendar.YEAR,  year);
+        cal.add(Calendar.MONTH, month);
+        cal.add(Calendar.DATE,  day);
+
+        return dtFormat.format(cal.getTime());
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CheckProductRequest;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
+import yapp.bestFriend.model.dto.res.SavingRecordSummaryDto;
 import yapp.bestFriend.model.utils.UserUtil;
 import yapp.bestFriend.service.savingRecord.SavingRecordService;
 
@@ -41,6 +42,16 @@ public class SavingRecordController {
     @ApiImplicitParam(name = "recordMM", value = "기록 일자(YYYYMM) ex)202206", required = true, paramType = "query", defaultValue = "")
     public ResponseEntity<DefaultRes<List<SavingRecordDto>>> getSavingList(@RequestParam("recordMM") String recordMM){
         return new ResponseEntity<>(savingRecordService.getSavingList(UserUtil.getId(), recordMM), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "절약 기록 Summary API", notes = "해당월의 전월대비 절약 기록 Summary를 제공해주는 API 입니다.")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "1. 조회 성공 \t\n 2. 조회 실패(사용자 정보 없음) \t\n 3.조회실패(기록일자 파라미터 오류) \t\n 4. 데이터 없음 \t\n")
+    })
+    @GetMapping("/savingRecords/summary")
+    @ApiImplicitParam(name = "recordMM", value = "기록 일자(YYYYMM) ex)202206", required = true, paramType = "query", defaultValue = "")
+    public ResponseEntity<DefaultRes<List<SavingRecordSummaryDto>>> getSavingSummary(@RequestParam("recordMM") String recordMM){
+        return new ResponseEntity<>(savingRecordService.getSavingSummary(UserUtil.getId(), recordMM), HttpStatus.OK);
     }
 
 }

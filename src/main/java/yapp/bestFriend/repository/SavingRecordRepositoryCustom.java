@@ -6,7 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
-import yapp.bestFriend.model.dto.response.SimpleProductResponse;
+import yapp.bestFriend.model.dto.res.SimpleProductResponse;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
 
