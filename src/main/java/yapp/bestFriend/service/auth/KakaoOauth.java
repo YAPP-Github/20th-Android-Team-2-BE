@@ -1,6 +1,5 @@
 package yapp.bestFriend.service.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 import yapp.bestFriend.model.dto.DefaultRes;
-import yapp.bestFriend.model.dto.KakaoProfile;
+import yapp.bestFriend.model.dto.request.SocialLoginRequest;
 import yapp.bestFriend.model.dto.res.user.UserSignInResponseDto;
 import yapp.bestFriend.model.entity.Role;
 import yapp.bestFriend.model.entity.User;
@@ -111,94 +110,158 @@ public class KakaoOauth implements SocialOauth {
                 bw.close();
             }
         } catch (IOException e) {
-            throw new IllegalArgumentException("알 수 없는 구글 로그인 Access Token 요청 URL 입니다 :: " + KAKAO_SNS_TOKEN_BASE_URL);
+            throw new IllegalArgumentException("알 수 없는 카카오 로그인 Access Token 요청 URL 입니다 :: " + KAKAO_SNS_TOKEN_BASE_URL);
         }
         return access_Token;
     }
 
-    public DefaultRes requestAccessTokenUsingURL(String access_token) {
+    /**
+     * 사용자로부터 SNS 로그인 정보를 받아 로그인 및 액세스 토큰 발급 처리
+     */
+    public DefaultRes requestAccessTokenUsingUserData(SocialLoginRequest request) {
 
-        log.info(">> 소셜 로그인 API 서버로부터 받은 access_token :: {}", access_token);
+        //사용자에게 받은 body 변수로 쪼개기
+        String email = request.getEmail();
+        String nickName = request.getNickName();
+        Long id = request.getProviderId();
 
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        UserConnection info = userConnectionRepository.findByEmail(email);
 
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        if(info == null) {
 
-            //요청에 필요한 Header에 포함될 내용
-            conn.setRequestProperty("Authorization", "Bearer " + access_token);
-            conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-            int responseCode = conn.getResponseCode();
-            if (responseCode == 200) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String line = "";
-                String result = "";
-                while ((line = br.readLine()) != null) {
-                    result += line;
-                }
-
-                //ObjectMapper로 JSON파싱 객체와 매핑
-                ObjectMapper objectMapper = new ObjectMapper();
-                KakaoProfile kakaoProfile = objectMapper.readValue(result, KakaoProfile.class);
-
-                String email = kakaoProfile.getKakao_account().getEmail();
-                String nickName = kakaoProfile.getProperties().getNickname();
-                Long id = kakaoProfile.getId();
-
-                UserConnection info = userConnectionRepository.findByEmail(email);
-
-                if(info == null) {
-                    UserConnection userConnection =
-                            UserConnection.builder()
-                                    .email(email)
-                                    .accessToken(access_token)
-                                    .nickName(nickName)
-                                    .provider(SocialLoginType.KAKAO)
-                                    .providerId(id)
-                                    .build();
-
-                    userConnection = userConnectionRepository.save(userConnection);
-
-                    User user = User.builder()
-                            .email(userConnection.getEmail())
-                            .password(userConnection.getAccessToken())
-                            .nickName(userConnection.getNickName())
-                            .userConnection(userConnection)
-                            .role(Role.USER)
+            UserConnection userConnection =
+                    UserConnection.builder()
+                            .email(email)
+                            .nickName(nickName)
+                            .provider(SocialLoginType.KAKAO)
+                            .providerId(id)
                             .build();
 
-                    userRepository.save(user);
+            userConnection = userConnectionRepository.save(userConnection);
 
-                    String accessToken = JwtUtil.createAccessToken(user.getId());//신규토큰 생성
-                    String refreshToken = JwtUtil.createRefreshToken(user.getId());
-                    user.setRefreshToken(refreshToken);
+            User user = User.builder()
+                    .email(userConnection.getEmail())
+                    .nickName(userConnection.getNickName())
+                    .userConnection(userConnection)
+                    .role(Role.USER)
+                    .build();
 
-                    return DefaultRes.response(HttpStatus.OK.value(), "등록성공", new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName()));
+            userRepository.save(user);
 
-                }else{
-                    User userInfo = userRepository.findByEmail(email);
-                    String accessToken = "", refreshToken= "";
-                    if(userInfo != null) {
-                        accessToken = JwtUtil.createAccessToken(userInfo.getId());//신규토큰 생성
-                        refreshToken = JwtUtil.createRefreshToken(userInfo.getId());//신규토큰 생성
-                        info.setAccessToken(accessToken);
-                        userConnectionRepository.save(info);
+            //신규토큰 생성
+            String accessToken = JwtUtil.createAccessToken(user.getId());
+            String refreshToken = JwtUtil.createRefreshToken(user.getId());
 
-                        userInfo.setPassword(accessToken);
-                        userInfo.setRefreshToken(refreshToken);
-                        userRepository.save(userInfo);
-                    }
+            userConnection.setAccessToken(accessToken);
+            userConnectionRepository.save(userConnection);
 
-                    return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, info.getId(), info.getNickName()));
-                }
+            user.setPassword(accessToken);
+            user.setRefreshToken(refreshToken);
+            userRepository.save(user);
+
+            return DefaultRes.response(HttpStatus.OK.value(), "등록성공", new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName()));
+
+        }else{
+            User userInfo = userRepository.findByEmail(email);
+            String accessToken = "", refreshToken= "";
+            if(userInfo != null) {
+                accessToken = JwtUtil.createAccessToken(userInfo.getId());//신규토큰 생성
+                refreshToken = JwtUtil.createRefreshToken(userInfo.getId());//신규토큰 생성
+                info.setAccessToken(accessToken);
+                userConnectionRepository.save(info);
+
+                userInfo.setPassword(accessToken);
+                userInfo.setRefreshToken(refreshToken);
+                userRepository.save(userInfo);
             }
 
-        } catch (IOException e) {
-            new IllegalArgumentException("알 수 없는 카카오 로그인 Access Token 요청 URL 입니다 :: " + KAKAO_SNS_TOKEN_BASE_URL);
+            return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, info.getId(), info.getNickName()));
         }
-
-        return DefaultRes.response(HttpStatus.OK.value(), "등록수정실패");
     }
+
+//    public DefaultRes requestAccessTokenUsingURL(String access_token) {
+//
+//        log.info(">> 소셜 로그인 API 서버로부터 받은 access_token :: {}", access_token);
+//
+//        String reqURL = "https://kapi.kakao.com/v2/user/me";
+//
+//        try {
+//            URL url = new URL(reqURL);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//
+//            //요청에 필요한 Header에 포함될 내용
+//            conn.setRequestProperty("Authorization", "Bearer " + access_token);
+//            conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//            int responseCode = conn.getResponseCode();
+//            if (responseCode == 200) {
+//                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//                String line = "";
+//                String result = "";
+//                while ((line = br.readLine()) != null) {
+//                    result += line;
+//                }
+//
+//                //ObjectMapper로 JSON파싱 객체와 매핑
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                KakaoProfile kakaoProfile = objectMapper.readValue(result, KakaoProfile.class);
+//
+//                String email = kakaoProfile.getKakao_account().getEmail();
+//                String nickName = kakaoProfile.getProperties().getNickname();
+//                Long id = kakaoProfile.getId();
+//
+//                UserConnection info = userConnectionRepository.findByEmail(email);
+//
+//                if(info == null) {
+//                    UserConnection userConnection =
+//                            UserConnection.builder()
+//                                    .email(email)
+//                                    .accessToken(access_token)
+//                                    .nickName(nickName)
+//                                    .provider(SocialLoginType.KAKAO)
+//                                    .providerId(id)
+//                                    .build();
+//
+//                    userConnection = userConnectionRepository.save(userConnection);
+//
+//                    User user = User.builder()
+//                            .email(userConnection.getEmail())
+//                            .password(userConnection.getAccessToken())
+//                            .nickName(userConnection.getNickName())
+//                            .userConnection(userConnection)
+//                            .role(Role.USER)
+//                            .build();
+//
+//                    userRepository.save(user);
+//
+//                    String accessToken = JwtUtil.createAccessToken(user.getId());//신규토큰 생성
+//                    String refreshToken = JwtUtil.createRefreshToken(user.getId());
+//                    user.setRefreshToken(refreshToken);
+//
+//                    return DefaultRes.response(HttpStatus.OK.value(), "등록성공", new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName()));
+//
+//                }else{
+//                    User userInfo = userRepository.findByEmail(email);
+//                    String accessToken = "", refreshToken= "";
+//                    if(userInfo != null) {
+//                        accessToken = JwtUtil.createAccessToken(userInfo.getId());//신규토큰 생성
+//                        refreshToken = JwtUtil.createRefreshToken(userInfo.getId());//신규토큰 생성
+//                        info.setAccessToken(accessToken);
+//                        userConnectionRepository.save(info);
+//
+//                        userInfo.setPassword(accessToken);
+//                        userInfo.setRefreshToken(refreshToken);
+//                        userRepository.save(userInfo);
+//                    }
+//
+//                    return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, info.getId(), info.getNickName()));
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            new IllegalArgumentException("알 수 없는 카카오 로그인 Access Token 요청 URL 입니다 :: " + KAKAO_SNS_TOKEN_BASE_URL);
+//        }
+//
+//        return DefaultRes.response(HttpStatus.OK.value(), "등록수정실패");
+//    }
 
 }
