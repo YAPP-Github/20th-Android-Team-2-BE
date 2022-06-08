@@ -1,7 +1,6 @@
 package yapp.bestFriend.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import static org.assertj.core.groups.Tuple.tuple;
         classes = JpaAuditingConfig.class
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Slf4j
 class SavingRecordRepositoryCustomTest {
 
     @Autowired

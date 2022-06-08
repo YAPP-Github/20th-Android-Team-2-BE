@@ -58,6 +58,9 @@ dependencies {
 
 	//static method 테스트를 위한 mockito-line 추가
 	testImplementation 'org.mockito:mockito-inline:3.11.2'
+
+	// 쿼리파라미터 로그확인용 외부 라이브러리
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 }
 
 //querydsl 추가 시작

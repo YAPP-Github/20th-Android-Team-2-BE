@@ -6,7 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
-import yapp.bestFriend.model.dto.response.SimpleProductResponse;
+import yapp.bestFriend.model.dto.res.SimpleProductResponse;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
 
@@ -27,7 +27,8 @@ public class SavingRecordRepositoryCustom {
                 .from(savingRecord)
                 .where(savingRecord.user.eq(existingUser)
                         .and(savingRecord.product.eq(product))
-                        .and(savingRecord.recordYmd.eq(now)))
+                        .and(savingRecord.recordYmd.eq(now))
+                        .and(savingRecord.deletedYn.eq(false)))
                 .fetchFirst();
 
         return fetchOne != null;

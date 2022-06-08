@@ -1,10 +1,9 @@
-package yapp.bestFriend.model.dto.response;
+package yapp.bestFriend.model.dto.res;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
