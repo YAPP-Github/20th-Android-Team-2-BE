@@ -38,3 +38,7 @@ out/
 
 ### SSL ###
 keystore.p12
+
+### Database ###
+/src/main/resources/application-dev.properties
+/src/main/resources/application-prod.properties
