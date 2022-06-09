@@ -61,6 +61,12 @@ dependencies {
 
 	// 쿼리파라미터 로그확인용 외부 라이브러리
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+
+	//maria DB
+	//compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.2'
+
+	//My SQL
+	implementation 'mysql:mysql-connector-java'
 }
 
 //querydsl 추가 시작
@@ -86,5 +92,3 @@ compileQuerydsl {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-
