@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import yapp.bestFriend.controller.api.product.ProductController;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.model.utils.UserUtil;
 import yapp.bestFriend.service.ProductService;

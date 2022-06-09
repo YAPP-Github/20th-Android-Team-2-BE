@@ -7,6 +7,7 @@ import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CheckProductRequest;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
 import yapp.bestFriend.model.dto.res.SavingRecordSummaryDto;
+import yapp.bestFriend.model.dto.res.SavingRecordSummaryInterface;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.SavingRecord;
 import yapp.bestFriend.model.entity.User;
@@ -55,7 +56,8 @@ public class SavingRecordService {
                 return savingRecordSoftDelete(existingUser, existingProduct);
             }
             else{
-                List<SavingRecord> deletedList = savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), existingProduct.getId(), existingUser.getId(), true);
+                List<SavingRecord> deletedList = savingRecordRepository.findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn
+                        (LocalDate.now(), existingProduct.getId(), existingUser.getId(), true);
 
                 //product, 유저, 날짜로 이미 삭제했던 데이터가 있는 경우 true로 업데이트하여 복원
                 if(!deletedList.isEmpty()){
@@ -88,7 +90,7 @@ public class SavingRecordService {
 
     private DefaultRes<Object> savingRecordSoftDelete(User existingUser, Product existingProduct) {
         // 해당날짜, 상품id, 유저id, 삭제여부로 조회
-        List<SavingRecord> savingRecordList = savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), existingProduct.getId(), existingUser.getId(), false);
+        List<SavingRecord> savingRecordList = savingRecordRepository.findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn(LocalDate.now(), existingProduct.getId(), existingUser.getId(), false);
         for(SavingRecord sr: savingRecordList){
             sr.delete();
             savingRecordRepository.save(sr);
@@ -143,12 +145,30 @@ public class SavingRecordService {
             String prevMM = AddDate(recordMM+"01", 0, -1, 0);
             String fromDate = prevMM.substring(0,4)+"-"+prevMM.substring(4,6);
             String toDate = recordMM.substring(0,4)+"-"+recordMM.substring(4,6);
+            LocalDate from = LocalDate.parse(fromDate+"-01");
+
+            //말일 구하기 - 월 부분은 -1을 해주어야 합니다 ( 0이 1월로 잡힌다. )
+            Calendar cal = Calendar.getInstance();
+            cal.set(Integer.parseInt(recordMM.substring(0,4)),Integer.parseInt(recordMM.substring(4,6))-1,1);
+            LocalDate to = LocalDate.parse(toDate+"-"+cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 
             // 각 절약 항목별로 직전월 대비 횟수를 보여준다.
-            List<SavingRecordSummaryDto> savingRecordSummaryList = savingRecordRepository.selectSummary(fromDate, toDate, userId)
-                    .stream()
-                    .map(SavingRecordSummaryDto::new)
-                    .collect(Collectors.toList());
+            List<SavingRecordSummaryInterface> monthlySummary = savingRecordRepository.selectSummary(fromDate, toDate, from, to, userId);
+            List<SavingRecordSummaryDto> savingRecordSummaryList =
+                    monthlySummary.stream().filter(s -> s.getRecordMm().equals(toDate))
+                            .map(record -> new SavingRecordSummaryDto(record.getRecordMm(), record.getProductName(), record.getBaseTimes(),
+                                            monthlySummary.stream()
+                                                    .filter(s -> s.getRecordMm().equals(fromDate) &&
+                                                            s.getProductName().equals(record.getProductName()))
+                                                    .findFirst().map(SavingRecordSummaryInterface::getPrevTimes).orElse(0),
+                                            record.getBaseTimes() - monthlySummary.stream()
+                                                    .filter(s -> s.getRecordMm().equals(fromDate) &&
+                                                            s.getProductName().equals(record.getProductName()))
+                                                    .findFirst().map(SavingRecordSummaryInterface::getPrevTimes).orElse(0)
+                                    )
+                            )
+                            .map(SavingRecordSummaryDto::new)
+                            .collect(Collectors.toList());
 
             if(savingRecordSummaryList.isEmpty()){
                 return DefaultRes.response(HttpStatus.OK.value(), "데이터 없음");

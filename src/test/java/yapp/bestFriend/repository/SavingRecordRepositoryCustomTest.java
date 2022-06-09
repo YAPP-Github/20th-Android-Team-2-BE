@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.test.context.ActiveProfiles;
 import yapp.bestFriend.config.JpaAuditingConfig;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
 import yapp.bestFriend.model.entity.Product;
@@ -27,6 +28,7 @@ import static org.assertj.core.groups.Tuple.tuple;
         classes = JpaAuditingConfig.class
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("dev")
 class SavingRecordRepositoryCustomTest {
 
     @Autowired

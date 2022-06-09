@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.test.context.ActiveProfiles;
 import yapp.bestFriend.config.JpaAuditingConfig;
 import yapp.bestFriend.config.LoginUserAuditorAware;
 import yapp.bestFriend.model.entity.Product;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         classes = {JpaAuditingConfig.class, LoginUserAuditorAware.class}
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("dev")
 class ProductRepositoryTest {
 
     @Autowired

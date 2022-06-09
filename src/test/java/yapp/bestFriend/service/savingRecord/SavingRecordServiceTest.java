@@ -106,7 +106,7 @@ class SavingRecordServiceTest {
                 .isChecked(user, LocalDate.now(), prodInput);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         when(productRepository.findById(request.getProductId())).thenReturn(Optional.ofNullable(prodInput));
-        when(savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
+        when(savingRecordRepository.findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
                 .thenReturn(user.getSavingList());
 
         //then
@@ -132,7 +132,7 @@ class SavingRecordServiceTest {
                 .isChecked(user, LocalDate.now(), prodInput);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         when(productRepository.findById(request.getProductId())).thenReturn(Optional.ofNullable(prodInput));
-        when(savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
+        when(savingRecordRepository.findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
                 .thenReturn(user.getSavingList());
 
         //then
@@ -156,7 +156,7 @@ class SavingRecordServiceTest {
                 .findByUserId(user, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")));
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         when(productRepository.findById(request.getProductId())).thenReturn(Optional.ofNullable(prodInput));
-        when(savingRecordRepository.findSavingRecordsByProductIdAndUserIdAndRecordYmdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
+        when(savingRecordRepository.findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn(LocalDate.now(), prodInput.getId(), user.getId(), true))
                 .thenReturn(Collections.emptyList());
 
         //then

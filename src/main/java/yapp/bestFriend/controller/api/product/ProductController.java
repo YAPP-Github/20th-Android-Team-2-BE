@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller;
+package yapp.bestFriend.controller.api.product;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;

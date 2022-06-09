@@ -34,4 +34,12 @@ public class SavingRecordSummaryDto {
         this.prevTimes = input.getPrevTimes();
         this.timesComparedToPrev = input.getTimesComparedToPrev();
     }
+
+    public SavingRecordSummaryDto(SavingRecordSummaryDto input) {
+        this.recordMM = input.getRecordMM();
+        this.name = input.getName();
+        this.baseTimes = input.getBaseTimes();
+        this.prevTimes = input.getPrevTimes();
+        this.timesComparedToPrev = input.getTimesComparedToPrev();
+    }
 }
