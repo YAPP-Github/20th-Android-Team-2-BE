@@ -2,11 +2,18 @@ plugins {
 	id 'org.springframework.boot' version '2.6.7'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	//querydsl 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'yapp'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 
 repositories {
 	mavenCentral()
@@ -14,16 +21,72 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//OAuth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.google.code.gson:gson:2.8.6'
+
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+	//forTest
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	//for Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	//querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:5.0.0"
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
+
+	//model Mapper
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+	//static method 테스트를 위한 mockito-line 추가
+	testImplementation 'org.mockito:mockito-inline:3.11.2'
+
+	// 쿼리파라미터 로그확인용 외부 라이브러리
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+
+	//maria DB
+	//compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.2'
+
+	//My SQL
+	implementation 'mysql:mysql-connector-java'
+}
+
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
 }
 
 tasks.named('test') {
