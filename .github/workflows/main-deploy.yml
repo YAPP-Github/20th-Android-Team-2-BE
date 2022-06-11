@@ -36,7 +36,7 @@ jobs: # 어떤 작업들을 수행할 것인가
           args: --acl public-read --follow-symlinks --delete
         env: # 환경 변수 설정. 해당 스텝이 끝나면 날아감
           AWS_S3_BUCKET: jeol-chin-prod-build
-          AWS_ACCESS_KEY_ID: ${{ secrets. AWS_IAM_MANAGER_KEY_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_IAM_MANAGER_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_MANAGER_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-2
           SOURCE_DIR: 'deploy' #github에서 보낼 디렉토리
