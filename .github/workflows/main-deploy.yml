@@ -42,4 +42,4 @@ jobs: # 어떤 작업들을 수행할 것인가
           SOURCE_DIR: 'deploy' #github에서 보낼 디렉토리
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name jeol-chin logging-system-deploy --deployment-config-name CodeDeployDefault.AllAtAtOnce --deployment-group-name jeol-chin-group --s3-location bucket=jeol-chin-prod-build,bundleType=zip,key=bestFriend.zip
+        run: aws deploy gcreate-deployment --application-name jeol-chin --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name jeol-chin-group --s3-location bucket=jeol-chin-prod-build,bundleType=zip,key=bestFriend.zip
