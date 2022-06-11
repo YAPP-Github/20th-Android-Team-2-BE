@@ -40,3 +40,6 @@ jobs: # 어떤 작업들을 수행할 것인가
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_MANAGER_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-2
           SOURCE_DIR: 'deploy' #github에서 보낼 디렉토리
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name jeol-chin logging-system-deploy --deployment-config-name CodeDeployDefault.AllAtAtOnce --deployment-group-name jeol-chin-group --s3-location bucket=jeol-chin-prod-build,bundleType=zip,key=bestFriend.zip
