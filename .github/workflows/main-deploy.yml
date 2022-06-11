@@ -1,0 +1,38 @@
+name: backend-prod-deploy
+
+on:
+  push: # 적용될 액션
+    branches: # 적용될 브랜치
+      - main
+
+jobs: # 어떤 작업들을 수행할 것인가
+  deploy:
+    name: Build, Deploy to S3 bucket
+    runs-on: ubuntu-latest # 액션이 실행될 때 구분되는 컴퓨터가 우분투였으면 좋겠다
+    steps: # 실제로 벌어지는 일
+      - uses: actions/checkout@v3 # 코드 저장소로 부터 CI 서버로 코드를 내려받도록 워크플로우를 구성
+
+      - name: gradle build
+        run: ./gradlew clean build
+
+      # 소스 파일 압축
+      - name: zip artifacts
+        run: zip -r bestFriend.zip *
+
+      - name: make directory
+        run: mkdir -p deploy
+
+      - name: move zip file to deploy folder
+        run: mv bestFriend.zip deploy/bestFriend.zip
+
+       # AWS S3에 압축파일을 전달하는 설정 및 명령어
+      - name: Transfer to S3 for serving static
+        uses: jakejarvis/s3-sync-action@master # github에 새로운 파일을 커밋하면 알아서 특정 aws s3와 sync가 됨
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env: # 환경 변수 설정. 해당 스텝이 끝나면 날아감
+          AWS_S3_BUCKET: jeol-chin-prod-build
+          AWS_ACCESS_KEY_ID: ${{ secrets. AWS_IAM_MANAGER_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_MANAGER_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+          SOURCE_DIR: 'deploy' #github에서 보낼 디렉토리
