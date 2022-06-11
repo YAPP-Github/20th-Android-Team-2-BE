@@ -23,7 +23,6 @@ jobs: # 어떤 작업들을 수행할 것인가
           classpath: 'example/changelogs'
           changeLogFile: 'samplechangelog.h2.sql'
           username: ${{ secrets.TEST_DB_USERNAME }}
-          password: ''
           url: ${{ secrets.TEST_DB_URL }}
 
       - name: gradle build
