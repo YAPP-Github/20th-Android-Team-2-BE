@@ -40,7 +40,7 @@ out/
 keystore.p12
 
 ### Database ###
-/src/main/resources/application.properties
+#/src/main/resources/application.properties # git pipeline 자동화를 위한 공통, test 프로퍼티 파일 주석해제
 /src/main/resources/application-dev.properties
-/src/main/resources/application-test.properties
+#/src/main/resources/application-test.properties
 /src/main/resources/application-prod.properties
