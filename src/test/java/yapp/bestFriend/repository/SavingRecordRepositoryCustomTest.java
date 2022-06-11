@@ -28,7 +28,7 @@ import static org.assertj.core.groups.Tuple.tuple;
         classes = JpaAuditingConfig.class
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 class SavingRecordRepositoryCustomTest {
 
     @Autowired

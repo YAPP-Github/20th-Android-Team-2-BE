@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)//embeddedDatabase를 할지 안할지
 //@Rollback(false)
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
