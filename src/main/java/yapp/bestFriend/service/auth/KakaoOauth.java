@@ -175,7 +175,7 @@ public class KakaoOauth implements SocialOauth {
                 userRepository.save(userInfo);
             }
 
-            return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, info.getId(), info.getNickName()));
+            return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, userInfo.getId(), info.getNickName()));
         }
     }
 

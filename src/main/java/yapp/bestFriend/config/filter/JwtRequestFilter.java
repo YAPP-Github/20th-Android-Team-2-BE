@@ -122,7 +122,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 new AntPathRequestMatcher("/swagger-ui.html"),
                 new AntPathRequestMatcher("/webjars/**"),
                 new AntPathRequestMatcher("/swagger/**"),
-                new AntPathRequestMatcher("/v2/api-docs")
+                new AntPathRequestMatcher("/v2/api-docs"),
+                new AntPathRequestMatcher("/health-check")
         );
     }
 }

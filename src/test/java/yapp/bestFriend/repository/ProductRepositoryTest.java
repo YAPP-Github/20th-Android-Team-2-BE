@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         classes = {JpaAuditingConfig.class, LoginUserAuditorAware.class}
 ))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 class ProductRepositoryTest {
 
     @Autowired
