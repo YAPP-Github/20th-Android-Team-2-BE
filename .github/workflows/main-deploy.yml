@@ -33,7 +33,7 @@ jobs: # 어떤 작업들을 수행할 것인가
       - name: Transfer to S3 for serving static
         uses: jakejarvis/s3-sync-action@master # github에 새로운 파일을 커밋하면 알아서 특정 aws s3와 sync가 됨
         with:
-          args: --acl public-read --follow-symlinks --delete
+          args: --acl private --follow-symlinks --delete #--acl private: 업로드하는 파일의 접근을 private으로 제한한다
         env: # 환경 변수 설정. 해당 스텝이 끝나면 날아감
           AWS_S3_BUCKET: jeol-chin-prod-build
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_IAM_MANAGER_KEY_ID }}
