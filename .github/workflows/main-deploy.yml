@@ -12,6 +12,10 @@ jobs: # 어떤 작업들을 수행할 것인가
     steps: # 실제로 벌어지는 일
       - uses: actions/checkout@v3 # 코드 저장소로 부터 CI 서버로 코드를 내려받도록 워크플로우를 구성
 
+      # gradlew 실행권한 추가
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: gradle build
         run: ./gradlew clean build
 
