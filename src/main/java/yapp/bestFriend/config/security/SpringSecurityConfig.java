@@ -41,6 +41,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll() // swagger 관련 리소스 시큐리티 필터 제거
+                .antMatchers("/health-check").permitAll()
                 .anyRequest().authenticated()
         ;
     }
