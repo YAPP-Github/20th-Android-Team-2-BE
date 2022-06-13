@@ -8,7 +8,7 @@ on:
 jobs: # 어떤 작업들을 수행할 것인가
   deploy:
     name: Build, Deploy to S3 bucket
-    runs-on: ubuntu-18.04 # 액션이 실행될 때 구분되는 컴퓨터가 우분투였으면 좋겠다
+    runs-on: ubuntu-latest # 액션이 실행될 때 구분되는 컴퓨터가 우분투였으면 좋겠다
     steps: # 실제로 벌어지는 일
       - uses: actions/checkout@v3 # 코드 저장소로 부터 CI 서버로 코드를 내려받도록 워크플로우를 구성
 
@@ -24,7 +24,10 @@ jobs: # 어떤 작업들을 수행할 것인가
         run: mkdir -p before-deploy # 압축하기 전에 디렉토리를 만들어야 한다
 
       - name: copy script file
-        run: cp scripts/*.sh before-deploy/ # 압축하기 전에 스크립트를 복사해야 한다
+        run: cp script/*.sh before-deploy/ # 압축하기 전에 스크립트를 복사해야 한다
+
+      - name: copy appsepc.yml file
+        run: cp appspec.yml before-deploy/
 
       - name: copy app file
         run: cp build/libs/*.jar before-deploy/ # 압축하기 전에 애플리케이션 파일을 복사해야 한다
@@ -32,17 +35,17 @@ jobs: # 어떤 작업들을 수행할 것인가
       - name: move to before-deploy directory
         run: cd before-deploy && zip -r before-deploy * # before-deploy로 이동 후 전체 압축
 
-      - name: move to parent directory and make deploy directory
-        run: cd ../ && mkdir -p deploy # 상위 디렉토리로 이동 후 deploy 디렉토리 생성
+      - name: make deploy directory
+        run: mkdir -p deploy # 상위 디렉토리로 이동 후 deploy 디렉토리 생성
+
+      ##디버깅용
+      - run: ls before-deploy -al # 압축한 파일이 있는지 확인
 
       - name: move zip file to deploy directory
-        run: mv before-deploy/before-deploy.zip deploy/bestFriend.zip #deploy로 zip파일 이동
+        run: sudo mv before-deploy/before-deploy.zip deploy/bestFriend.zip #deploy로 zip파일 이동
 
-      - name: zip artifacts
-        run: zip -r bestFriend.zip *
-
-      - name: move zip file to deploy folder
-        run: mv bestFriend.zip deploy/bestFriend.zip
+      ##디버깅용
+      - run: ls deploy -al # 압축한 파일이 있는지 확인
 
        # AWS S3에 압축파일을 전달하는 설정 및 명령어
       - name: Transfer to S3 for serving static
@@ -54,7 +57,12 @@ jobs: # 어떤 작업들을 수행할 것인가
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_IAM_MANAGER_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_MANAGER_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-2
-          SOURCE_DIR: 'deploy' #github에서 보낼 디렉토리
+          SOURCE_DIR: './deploy' #github에서 보낼 디렉토리
+          AWS_EC2_METADATA_DISABLED: true
 
       - name: Code Deploy
         run: aws deploy create-deployment --application-name jeol-chin --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name jeol-chin-group --s3-location bucket=jeol-chin-prod-build,bundleType=zip,key=bestFriend.zip
+        env: # 환경 변수 설정. 해당 스텝이 끝나면 날아감
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_IAM_MANAGER_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_MANAGER_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
