@@ -7,4 +7,5 @@ public interface UserConnectionRepository extends JpaRepository<UserConnection, 
 
     UserConnection findByEmail(String email);
 
+    Integer deleteByEmail(String email);
 }

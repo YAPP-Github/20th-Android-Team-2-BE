@@ -73,4 +73,8 @@ public class User extends BaseInfo {
     public void setSavingRecord(List<SavingRecord> savingList){
         this.savingList = savingList;
     }
+
+    public void deleteUserConnection() {
+        this.userConnection = null;
+    }
 }
