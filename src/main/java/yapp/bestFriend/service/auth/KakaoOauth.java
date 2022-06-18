@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.SocialLoginRequest;
 import yapp.bestFriend.model.dto.res.user.UserSignInResponseDto;
@@ -118,6 +119,7 @@ public class KakaoOauth implements SocialOauth {
     /**
      * 사용자로부터 SNS 로그인 정보를 받아 로그인 및 액세스 토큰 발급 처리
      */
+    @Transactional(rollbackFor = Exception.class)
     public DefaultRes requestAccessTokenUsingUserData(SocialLoginRequest request) {
 
         //사용자에게 받은 body 변수로 쪼개기
@@ -139,14 +141,7 @@ public class KakaoOauth implements SocialOauth {
 
             userConnection = userConnectionRepository.save(userConnection);
 
-            User user = User.builder()
-                    .email(userConnection.getEmail())
-                    .nickName(userConnection.getNickName())
-                    .userConnection(userConnection)
-                    .role(Role.USER)
-                    .build();
-
-            userRepository.save(user);
+            User user = getUserInfo(email, userConnection);
 
             //신규토큰 생성
             String accessToken = JwtUtil.createAccessToken(user.getId());
@@ -177,6 +172,23 @@ public class KakaoOauth implements SocialOauth {
 
             return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, userInfo.getId(), info.getNickName()));
         }
+    }
+
+    private User getUserInfo(String email, UserConnection userConnection) {
+        User user;
+        if(userRepository.findByEmail(email) == null) {
+            user = User.builder()
+                    .email(userConnection.getEmail())
+                    .nickName(userConnection.getNickName())
+                    .userConnection(userConnection)
+                    .role(Role.USER)
+                    .build();
+        }else{
+            user = userRepository.findByEmail(email);
+        }
+
+        userRepository.save(user);
+        return user;
     }
 
 //    public DefaultRes requestAccessTokenUsingURL(String access_token) {

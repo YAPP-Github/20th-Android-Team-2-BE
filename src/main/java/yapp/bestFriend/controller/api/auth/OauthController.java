@@ -25,14 +25,12 @@ public class OauthController {
     private final OauthService oauthService;
 
     @ApiOperation(value = "소셜로그인 API",notes = "소셜로그인 API 입니다.")
-    @ApiParam("KAKAO")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "등록 성공"),
     })
-    @PostMapping(value = "/{socialLoginType}")
-    public ResponseEntity<DefaultRes> SocialLoginRequest(@PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
-                                                         @Valid @RequestBody SocialLoginRequest request){
-        return new ResponseEntity<>(oauthService.requestLogin(socialLoginType, request), HttpStatus.OK);
+    @PostMapping(value = "/sign-in")
+    public ResponseEntity<DefaultRes> SocialLoginRequest(@Valid @RequestBody SocialLoginRequest request){
+        return new ResponseEntity<>(oauthService.requestLogin(request), HttpStatus.OK);
     }
 
     /**
