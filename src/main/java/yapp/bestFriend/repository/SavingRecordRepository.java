@@ -43,5 +43,5 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
 
     List<SavingRecord> findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn(LocalDate recordYmd, Long productId, Long userId, Boolean DeletedYn); // where name = ? and ranking = ?
 
-
+    List<SavingRecord> findByUserIdAndDeletedYn(long userId, boolean deletedYn);
 }
