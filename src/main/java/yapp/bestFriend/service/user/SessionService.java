@@ -1,6 +1,7 @@
 package yapp.bestFriend.service.user;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class SessionService {
         Claims claims;
         try{
             claims = JwtUtil.getClaimsFromToken(jwtToken);
+        }catch (ExpiredJwtException e){//유효기간이 지난 JWT를 수신한 경우
+            return DefaultRes.response(HttpStatus.UNAUTHORIZED.value(), "토큰만료");
         }catch (Exception e){
             return DefaultRes.response(HttpStatus.UNAUTHORIZED.value(), "토큰불일치");
         }
