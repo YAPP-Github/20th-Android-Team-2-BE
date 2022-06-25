@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -56,7 +57,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (requestTokenHeader == null) {
-            setResponse(request, response, SC_UNAUTHORIZED, "Token not found");
+            setResponse(response, SC_UNAUTHORIZED, "Token not found");
             return true;
         }
 
@@ -72,8 +73,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userId.toString());
-            if (jwtTokenUtil.validateToken(jwtToken, (yapp.bestFriend.service.user.UserDetails) userDetails)) {
+            UserDetails userDetails = getUserDetails(request, response, userId);
+            if(userDetails == null) return true;
+            if(jwtTokenUtil.validateToken(jwtToken, (yapp.bestFriend.service.user.UserDetails) userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -81,6 +83,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         return false;
+    }
+
+    private UserDetails getUserDetails(HttpServletRequest request, HttpServletResponse response, Long userId) throws IOException {
+        try {
+            return userDetailsService.loadUserByUsername(userId.toString());
+        }catch (UsernameNotFoundException e) {
+            setResponse(response, SC_UNAUTHORIZED, "User not found");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -91,10 +105,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return jwtTokenUtil.getUserIdFromToken(jwtToken);
         }catch (ExpiredJwtException e) {
             e.printStackTrace();
-            setResponse(request, response, SC_UNAUTHORIZED, "Access Token expired");
+            setResponse(response, SC_UNAUTHORIZED, "Access Token expired");
         }catch (JwtException e) {
             e.printStackTrace();
-            setResponse(request, response, SC_UNAUTHORIZED, "Invalid Access Token");
+            setResponse(response, SC_UNAUTHORIZED, "Invalid Access Token");
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +118,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     /**
      * 한글 출력을 위해 getWriter() 사용
      */
-    private void setResponse(HttpServletRequest request, HttpServletResponse response, int errorCode, String message) throws IOException {
+    private void setResponse(HttpServletResponse response, int errorCode, String message) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(errorCode);
         response.getWriter().println("{ \"message\" : \"" + message
