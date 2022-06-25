@@ -77,4 +77,8 @@ public class User extends BaseInfo {
     public void deleteUserConnection() {
         this.userConnection = null;
     }
+
+    public void setUserConnection(UserConnection userConnection) {
+        this.userConnection = userConnection;
+    }
 }

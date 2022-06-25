@@ -18,7 +18,7 @@ import yapp.bestFriend.model.entity.UserConnection;
 import yapp.bestFriend.model.enumClass.SocialLoginType;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.UserConnectionRepository;
-import yapp.bestFriend.repository.UserRepository;
+import yapp.bestFriend.repository.user.UserRepository;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -152,6 +152,7 @@ public class KakaoOauth implements SocialOauth {
 
             user.setPassword(accessToken);
             user.setRefreshToken(refreshToken);
+            user.setUserConnection(userConnection);
             userRepository.save(user);
 
             return DefaultRes.response(HttpStatus.OK.value(), "등록성공", new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName()));
