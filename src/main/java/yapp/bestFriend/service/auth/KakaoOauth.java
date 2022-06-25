@@ -18,7 +18,7 @@ import yapp.bestFriend.model.entity.UserConnection;
 import yapp.bestFriend.model.enumClass.SocialLoginType;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.UserConnectionRepository;
-import yapp.bestFriend.repository.user.UserRepository;
+import yapp.bestFriend.repository.UserRepository;
 
 import java.io.*;
 import java.net.HttpURLConnection;

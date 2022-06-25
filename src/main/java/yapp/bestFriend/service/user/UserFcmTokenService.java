@@ -10,9 +10,9 @@ import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.model.entity.UserFcmToken;
 import yapp.bestFriend.model.enumClass.RequestPushMessage;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.repository.user.PushNotiHistoryRepository;
+import yapp.bestFriend.repository.PushNotiHistoryRepository;
 import yapp.bestFriend.repository.UserFcmTokenRepository;
-import yapp.bestFriend.repository.user.UserRepository;
+import yapp.bestFriend.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
