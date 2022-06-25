@@ -12,6 +12,7 @@ import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.model.entity.UserConnection;
 import yapp.bestFriend.model.enumClass.SocialLoginType;
 import yapp.bestFriend.repository.UserConnectionRepository;
+import yapp.bestFriend.repository.UserFcmTokenRepository;
 import yapp.bestFriend.repository.UserRepository;
 
 import java.util.Optional;
@@ -28,6 +29,9 @@ class UserServiceTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    UserFcmTokenRepository userFcmTokenRepository;
 
     @InjectMocks
     private UserService userService;
@@ -56,6 +60,7 @@ class UserServiceTest {
         when(userRepository.save(any())).thenReturn(null);
         when(userConnectionRepository.getById(any())).thenReturn(userConnectionInfo);
         when(userConnectionRepository.save(any())).thenReturn(1);
+        when(userFcmTokenRepository.findByUserId(any())).thenReturn(Optional.empty());
 
         //then
         assertThat(userService.logout(1L))

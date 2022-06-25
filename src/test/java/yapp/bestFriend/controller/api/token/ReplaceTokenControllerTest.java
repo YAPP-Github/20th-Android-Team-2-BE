@@ -18,6 +18,7 @@ import yapp.bestFriend.model.dto.res.ReplaceTokenResponseDto;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.service.user.SessionService;
 import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.user.UserFcmTokenService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -41,6 +42,9 @@ class ReplaceTokenControllerTest {
 
     @MockBean
     UserDetailsService userDetailsService;
+
+    @MockBean
+    UserFcmTokenService userFcmTokenService;
 
     @MockBean
     PasswordEncoder passwordEncoder;
