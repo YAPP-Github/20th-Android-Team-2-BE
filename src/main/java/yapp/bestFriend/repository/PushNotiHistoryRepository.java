@@ -1,4 +1,4 @@
-package yapp.bestFriend.repository.user;
+package yapp.bestFriend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
