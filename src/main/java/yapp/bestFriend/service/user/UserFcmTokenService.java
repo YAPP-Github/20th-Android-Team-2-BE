@@ -70,8 +70,3 @@ public class UserFcmTokenService {
                 java.util.stream.Collectors.toList());
     }
 }
-
-
-//        this.user = user;
-//                this.title = title;
-//                this.body = body;
