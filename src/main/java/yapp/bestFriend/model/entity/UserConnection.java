@@ -37,8 +37,7 @@ public class UserConnection extends BaseInfo {
     }
 
     @Builder
-    private UserConnection(String email, SocialLoginType provider, Long providerId, String nickName,
-                           String accessToken) {
+    private UserConnection(String email, SocialLoginType provider, Long providerId, String nickName, String accessToken) {
         this.email = email;
         this.provider = provider;
         this.providerId = providerId;

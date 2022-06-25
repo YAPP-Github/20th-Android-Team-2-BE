@@ -8,21 +8,23 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import yapp.bestFriend.model.dto.DefaultRes;
+import yapp.bestFriend.model.dto.request.FmcRegisterRequest;
 import yapp.bestFriend.service.user.SessionService;
+import yapp.bestFriend.service.user.UserFcmTokenService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-@Api(tags = {"엑세스 토큰 재발급 API"})
+@Api(tags = {"토큰 관련 API"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ReplaceTokenController {
 
     private final SessionService sessionService;
+    private final UserFcmTokenService userFcmTokenService;
 
     @ApiOperation(value = "엑세스 토큰 재발급 API",notes = "리프레시 토큰이 유효하다면 엑세스 토큰을 재발급 합니다.(유효하지 않다면 로그아웃 처리")
     @ApiResponses(value ={
@@ -42,4 +44,15 @@ public class ReplaceTokenController {
         }
 
     }
+
+    @ApiOperation(value = "FCM 토큰 저장 API",notes = "FMC 토큰을 유저 테이블에 저장합니다.")
+    @ApiResponses(value ={
+            @ApiResponse(code=200, message = "1. 저장 성공")
+    })
+    @PostMapping("/fcm-token")
+    public ResponseEntity<DefaultRes> saveFcmToken(@Valid @RequestBody FmcRegisterRequest request){
+        DefaultRes defaultRes = userFcmTokenService.saveFcmToken(request);
+        return new ResponseEntity<>(defaultRes, HttpStatus.OK);
+    }
+
 }
