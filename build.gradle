@@ -61,6 +61,9 @@ dependencies {
 
 	//maria DB
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.4.2'
+
+	//push 알림을 위한 firebase
+	implementation 'com.google.firebase:firebase-admin:8.2.0'
 }
 
 //querydsl 추가 시작
