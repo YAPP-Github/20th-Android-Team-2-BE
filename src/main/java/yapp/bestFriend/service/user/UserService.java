@@ -8,9 +8,8 @@ import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.SavingRecord;
 import yapp.bestFriend.model.entity.User;
-import yapp.bestFriend.repository.ProductRepository;
-import yapp.bestFriend.repository.SavingRecordRepository;
-import yapp.bestFriend.repository.UserConnectionRepository;
+import yapp.bestFriend.model.entity.UserFcmToken;
+import yapp.bestFriend.repository.*;
 import yapp.bestFriend.repository.UserRepository;
 
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final UserConnectionRepository userConnectionRepository;
+    private final UserFcmTokenRepository userFcmTokenRepository;
     private final ProductRepository productRepository;
     private final SavingRecordRepository savingRecordRepository;
 
@@ -35,6 +35,7 @@ public class UserService {
             deleteUserConnectionInfo(existingUser);
             deleteProduct(userId);
             softDeleteSavingRecord(userId);
+            deleteFcmToken(userId);
         }
 
         return DefaultRes.response(HttpStatus.OK.value(), "탈퇴 성공");
@@ -49,7 +50,6 @@ public class UserService {
         }
 
         User existingUser = user.get();
-
         existingUser.deleteUserConnection();
         userRepository.save(existingUser);
 
@@ -57,7 +57,16 @@ public class UserService {
             deleteUserConnectionInfo(existingUser);
         }
 
+        deleteFcmToken(userId);
+
         return DefaultRes.response(HttpStatus.OK.value(), "로그아웃 성공");
+    }
+
+    private void deleteFcmToken(long userId) {
+        Optional<UserFcmToken> userFcmToken = userFcmTokenRepository.findByUserId(userId);
+        if(userFcmToken.isPresent()){
+            userFcmTokenRepository.delete(userFcmToken.get());
+        }
     }
 
     private void softDeleteSavingRecord(long userId) {
