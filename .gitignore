@@ -44,3 +44,6 @@ keystore.p12
 /src/main/resources/application-dev.properties
 #/src/main/resources/application-test.properties
 /src/main/resources/application-prod.properties
+
+### firebase ###
+/src/main/resources/firebase_service_key.json
