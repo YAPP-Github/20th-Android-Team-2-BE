@@ -22,7 +22,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findById(Long.parseLong(username));
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("404 - User Not Found");
         }
 
