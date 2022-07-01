@@ -1,6 +1,7 @@
 package yapp.bestFriend.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import liquibase.pro.packaged.D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import yapp.bestFriend.model.entity.SavingRecord;
 import yapp.bestFriend.model.entity.User;
 
 import javax.persistence.EntityManager;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -73,14 +75,15 @@ class SavingRecordRepositoryCustomTest {
 
         //given 3 - 세이빙레코드 정보
         SavingRecord savingRecord = SavingRecord.builder()
-                .recordYmd(LocalDate.of(2022,06,01))
                 .product(prodInput)
                 .user(user)
                 .build();
         savingRecordRepository.save(savingRecord);
 
+        DecimalFormat df = new DecimalFormat("00");
+
         //when
-        List<SavingRecordDto> result = savingRecordRepositoryCustom.findByUserId(user, "202206");
+        List<SavingRecordDto> result = savingRecordRepositoryCustom.findByUserId(user, "2022".concat(df.format(LocalDate.now().getMonthValue())));
 
         //then
         assertThat(result).extracting("productId","name","price","resolution").contains(

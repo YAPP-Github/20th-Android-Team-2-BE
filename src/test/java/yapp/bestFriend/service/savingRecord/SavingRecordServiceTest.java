@@ -48,7 +48,7 @@ class SavingRecordServiceTest {
     private static List<SavingRecordDto> result;
     private static User user;
     private static Product prodInput;
-    private static String recordMM = "202206";
+    private static String recordMM;
 
     @BeforeAll
     static void BeforeAll(){
@@ -72,7 +72,6 @@ class SavingRecordServiceTest {
                 SavingRecord.builder()
                         .product(prodInput)
                         .user(user)
-                        .recordYmd(LocalDate.now())
                         .build()
         ));
 
@@ -87,6 +86,8 @@ class SavingRecordServiceTest {
                     .build()
             );
         }
+
+        recordMM = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
     }
 
     @Test
