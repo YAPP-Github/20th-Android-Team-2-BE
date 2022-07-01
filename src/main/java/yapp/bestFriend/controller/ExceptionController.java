@@ -31,6 +31,6 @@ public class ExceptionController {
         }
 
         return new ResponseEntity<>(DefaultRes.response(HttpStatus.BAD_REQUEST.value(),
-                "유효성 검증 실패",builder.toString()), HttpStatus.BAD_REQUEST);
+                builder.toString()),null, HttpStatus.BAD_REQUEST);
     }
 }

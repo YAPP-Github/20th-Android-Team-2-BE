@@ -21,9 +21,12 @@ import yapp.bestFriend.model.utils.UserUtil;
 import yapp.bestFriend.service.ProductService;
 import yapp.bestFriend.service.user.UserDetailsService;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -58,10 +61,25 @@ class ProductControllerTest {
                         .content("{\n" +
                                 "  \"userId\": \"35\",\n" +
                                 "  \"name\": \"커피\",\n" +
-                                "  \"price\": \"5500원\",\n" +
-                                "  \"resolution\": \"절약과 친해지자\"\n" +
+                                "  \"price\": \"5500원\"\n" +
                                 "}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("항목을 다 입력하지 않았을 때 절약 등록하기")
+    void createProductWhenAllItemsHaveNotBeenEntered() throws Exception {
+        mvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"userId\": \"35\",\n" +
+                                "  \"name\": \"커피\"\n" +
+                                "}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data", is(nullValue())))
+                .andExpect(jsonPath("$.message", is("[price](은)는 must not be blank 입력된 값: [null]")))
+                .andDo(print());
     }
 
     @Test
@@ -88,8 +106,7 @@ class ProductControllerTest {
                                 "  \"userId\": \"35\",\n" +
                                 "  \"productId\": \"34\",\n" +
                                 "  \"name\": \"수정 테스트\",\n" +
-                                "  \"price\": \"5500원\",\n" +
-                                "  \"resolution\": \"수정할래\"\n" +
+                                "  \"price\": \"5500원\"\n" +
                                 "}"))
                 .andExpect(status().isOk());
     }
@@ -107,4 +124,5 @@ class ProductControllerTest {
                     .andExpect(status().isOk());
         }
     }
+
 }
