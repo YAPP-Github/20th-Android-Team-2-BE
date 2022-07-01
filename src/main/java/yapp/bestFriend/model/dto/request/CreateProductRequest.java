@@ -30,10 +30,6 @@ public class CreateProductRequest {
     @ApiModelProperty(value = "1회당 지출 금액")
     private String price;
 
-    @NotBlank
-    @ApiModelProperty(value = "다짐")
-    private String resolution;
-
     public Product toEntity(User user) {
         return Product.builder()
                 .user(user)
