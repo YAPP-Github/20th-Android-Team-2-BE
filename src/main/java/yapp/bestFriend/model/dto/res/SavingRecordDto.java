@@ -25,7 +25,4 @@ public class SavingRecordDto {
     @ApiModelProperty(value = "1회당 지출 금액", example = "8000")
     private String price;
 
-    @ApiModelProperty(value = "다짐")
-    private String resolution;
-
 }

@@ -26,8 +26,4 @@ public class UpdateProductRequest {
     @NotBlank
     @ApiModelProperty(value = "1회당 지출 금액")
     private String price;
-
-    @NotBlank
-    @ApiModelProperty(value = "다짐")
-    private String resolution;
 }

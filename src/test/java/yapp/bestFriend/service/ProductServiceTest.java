@@ -35,12 +35,11 @@ class ProductServiceTest {
             //given
             String name = "던힐 아이스큐브";
             String price = "4500원";
-            String resolution = "금연과 절약";
             Long userId = 35L;
             User user = new User();
 
             given(userRepository.findById(userId)).willReturn(Optional.of(user));
-            CreateProductRequest request = new CreateProductRequest(userId, name, price, resolution);
+            CreateProductRequest request = new CreateProductRequest(userId, name, price);
             Product mockProduct = request.toEntity(userRepository.findById(userId).get());
 
             //when
