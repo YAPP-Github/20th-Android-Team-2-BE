@@ -50,7 +50,6 @@ class SavingRecordRepositoryTest {
                 .user(savedUser)
                 .name("커피")
                 .price("4500원")
-                .resolution("절약과 친해지자")
                 .build();
 
         Product savedProduct = productRepository.save(product);

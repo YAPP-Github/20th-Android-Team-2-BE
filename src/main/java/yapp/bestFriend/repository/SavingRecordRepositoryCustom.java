@@ -41,8 +41,7 @@ public class SavingRecordRepositoryCustom {
                         savingRecord.recordYmd,
                         savingRecord.product.id,
                         savingRecord.product.name,
-                        savingRecord.product.price,
-                        savingRecord.product.resolution))
+                        savingRecord.product.price))
                 .from(savingRecord)
                 .where(savingRecord.user.id.eq(existingUser.getId()))
                 .where(savingRecord.recordYmd.yearMonth().eq(Integer.valueOf(nowYyyyMm)))
@@ -59,7 +58,6 @@ public class SavingRecordRepositoryCustom {
                         savingRecord.product.id,
                         savingRecord.product.name,
                         savingRecord.product.price,
-                        savingRecord.product.resolution,
                         Expressions.asBoolean(true).isTrue(),
                         savingRecord.recordYmd
                         ))

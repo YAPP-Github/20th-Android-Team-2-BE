@@ -67,7 +67,6 @@ class savingRecordControllerTest {
                         .productId(1L)
                         .name("빙수")
                         .price("8000")
-                        .resolution("더워도 조금만 참아")
                         .build());
 
         DefaultRes result = new DefaultRes<>(HttpStatus.OK.value(), "조회성공", serviceResult);

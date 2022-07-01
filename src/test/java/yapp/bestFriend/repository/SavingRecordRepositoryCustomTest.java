@@ -69,7 +69,6 @@ class SavingRecordRepositoryCustomTest {
         Product prodInput = Product.builder().user(user)
                 .name("빙수")
                 .price("8000")
-                .resolution("더워도 참아")
                 .build();
         productRepository.save(prodInput);
 
@@ -86,8 +85,8 @@ class SavingRecordRepositoryCustomTest {
         List<SavingRecordDto> result = savingRecordRepositoryCustom.findByUserId(user, "2022".concat(df.format(LocalDate.now().getMonthValue())));
 
         //then
-        assertThat(result).extracting("productId","name","price","resolution").contains(
-                tuple(prodInput.getId(), prodInput.getName(),prodInput.getPrice(),prodInput.getResolution()
+        assertThat(result).extracting("productId","name","price").contains(
+                tuple(prodInput.getId(), prodInput.getName(),prodInput.getPrice()
         ));
     }
 }

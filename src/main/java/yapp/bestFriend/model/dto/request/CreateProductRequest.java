@@ -39,7 +39,6 @@ public class CreateProductRequest {
                 .user(user)
                 .name(name)
                 .price(price)
-                .resolution(resolution)
                 .build();
     }
 }

@@ -20,9 +20,6 @@ public class SimpleProductResponse {
     @ApiModelProperty(value = "1회당 지출 금액")
     private String price;
 
-    @ApiModelProperty(value = "다짐")
-    private String resolution;
-
     @ApiModelProperty(value = "당일 절약 완료 여부")
     private boolean isChecked;
 

@@ -64,7 +64,6 @@ class SavingRecordServiceTest {
         prodInput = Product.builder().user(user)
                 .name("빙수")
                 .price("8000")
-                .resolution("더워도 참아")
                 .build();
 
         //given 3 - user product 정보 update
@@ -82,7 +81,6 @@ class SavingRecordServiceTest {
                     .productId(savingRecord.getProduct().getId())
                     .name(savingRecord.getProduct().getName())
                     .price(savingRecord.getProduct().getPrice())
-                    .resolution(savingRecord.getProduct().getResolution())
                     .build()
             );
         }

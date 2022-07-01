@@ -48,7 +48,7 @@ public class ProductService {
 
             //오늘인 경우
             if(recordYmd.equals(nowYmd)){
-                return getListDefaultRes(user);
+                return getListDefaultRes(user.get());
             }
 
             List<SimpleProductResponse> savingRecordVoList = savingRecordRepositoryCustom.findByUserIdByYmd(user.get(), recordYmd);
@@ -58,8 +58,7 @@ public class ProductService {
         else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
     }
 
-    private DefaultRes<List<SimpleProductResponse>> getListDefaultRes(Optional<User> user) {
-        User existingUser = user.get();
+    private DefaultRes<List<SimpleProductResponse>> getListDefaultRes(User existingUser) {
         List<Product> productList = productRepository.findByUserIdAndDeletedYn(existingUser.getId(), false);
 
         if(productList.isEmpty()){
@@ -67,7 +66,7 @@ public class ProductService {
         }
         else{
             List<SimpleProductResponse> SimpleProductResponseList = productList.stream()
-                    .map(product -> new SimpleProductResponse(product.getId(), product.getName(), product.getPrice(), product.getResolution(), savingRecordRepositoryCustom.isChecked(existingUser,LocalDate.now(),product), LocalDate.now()))
+                    .map(product -> new SimpleProductResponse(product.getId(), product.getName(), product.getPrice(), savingRecordRepositoryCustom.isChecked(existingUser,LocalDate.now(),product), LocalDate.now()))
                     .collect(Collectors.toList());
 
             return DefaultRes.response(HttpStatus.OK.value(), "조회성공", SimpleProductResponseList);

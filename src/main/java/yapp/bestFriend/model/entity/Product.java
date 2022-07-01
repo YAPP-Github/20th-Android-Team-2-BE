@@ -26,8 +26,6 @@ public class Product extends BaseInfo {
 
     private String price;
 
-    private String resolution;
-
     @Override
     public String toString() {
         return "Product{" +
@@ -35,23 +33,20 @@ public class Product extends BaseInfo {
                 ", userId='" + user.getId() + '\'' +
                 ", name='" + name + '\'' +
                 ", price='" + price + '\'' +
-                ", resolution='" + resolution + '\'' +
                 super.toString() +
                 '}';
     }
 
     @Builder
-    public Product(User user, String name, String price, String resolution){
+    public Product(User user, String name, String price){
         this.user = user;
         this.name = name;
         this.price = price;
-        this.resolution = resolution;
     }
 
     public Product updateBoard(UpdateProductRequest request) {
         this.name = request.getName();
         this.price = request.getPrice();
-        this.resolution = request.getResolution();
 
         return this;
     }
