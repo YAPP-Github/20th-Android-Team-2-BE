@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.savingRecord;
+package yapp.bestFriend.controller.api.savingrecord;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;

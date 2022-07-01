@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.savingRecord;
+package yapp.bestFriend.controller.api.savingrecord;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
