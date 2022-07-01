@@ -65,7 +65,7 @@ class AlramServiceTest {
     void calculateElapsedTimeWhenYearAgo(){
         //given
         LocalDateTime now = LocalDateTime.of(2022,7,1,12,21);
-        LocalDateTime past = LocalDateTime.of(219,12,13,12,21);
+        LocalDateTime past = LocalDateTime.of(2019,12,13,12,21);
 
         //then
         assertThat(alramService.CallCalculateElapsedTime(past, now), is("2년 전"));
