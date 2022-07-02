@@ -17,6 +17,8 @@ import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.UserConnectionRepository;
 import yapp.bestFriend.repository.UserRepository;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
@@ -38,10 +40,10 @@ class KakaoOauthTest {
     @DisplayName("로그아웃한 사용자 로그인 시")
     void requestLogin() {
         //given
-        SocialLoginRequest socialLoginRequest = new SocialLoginRequest();
-        socialLoginRequest.builder().providerId(1L)
+        SocialLoginRequest socialLoginRequest = SocialLoginRequest
+                .builder().providerId(1L)
                 .email("test@naver.com")
-                .nickName("best friend");
+                .nickName("best friend").build();
 
         UserConnection userConnectionInfo = UserConnection.builder()
                 .email("test@naver.com")
@@ -51,17 +53,20 @@ class KakaoOauthTest {
                 .accessToken("accessToken")
                 .build();
 
-        //when
-        when(userConnectionRepository.findById(any())).thenReturn(null);
-        when(userConnectionRepository.save(any())).thenReturn(userConnectionInfo);
-        when(userRepository.findByEmail(any())).thenReturn(null);
-        when(userRepository.save(any())).thenReturn(User.builder()
+        User user = User.builder()
                 .email("test@naver.com")
                 .password("123456")
                 .nickName("best friend")
                 .role(Role.USER)
                 .userConnection(userConnectionInfo)
-                .build());
+                .localDateTime(LocalDateTime.now())
+                .build();
+
+        //when
+        when(userConnectionRepository.findById(any())).thenReturn(null);
+        when(userConnectionRepository.save(any())).thenReturn(userConnectionInfo);
+        when(userRepository.findByEmail("test@naver.com")).thenReturn(user);
+        when(userRepository.save(any())).thenReturn(user);
 
         try (MockedStatic<JwtUtil> mockedStatic = mockStatic(JwtUtil.class)) {
             mockedStatic.when(() -> JwtUtil.createAccessToken(any())).thenReturn("accessToken");
