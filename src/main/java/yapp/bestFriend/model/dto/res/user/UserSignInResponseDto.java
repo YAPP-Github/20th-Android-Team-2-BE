@@ -1,10 +1,14 @@
 package yapp.bestFriend.model.dto.res.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserSignInResponseDto {
 
     private String accessToken;
@@ -15,11 +19,8 @@ public class UserSignInResponseDto {
 
     private String nickName;
 
-    public UserSignInResponseDto(String accessToken, String refreshToken,
-                                 Long userId, String nickName) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.userId = userId;
-        this.nickName = nickName;
-    }
+    private String email;
+
+    private LocalDateTime createAt;
+
 }
