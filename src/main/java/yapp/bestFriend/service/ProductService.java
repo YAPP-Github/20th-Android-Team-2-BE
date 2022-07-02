@@ -44,11 +44,16 @@ public class ProductService {
 
         // 해당 userId로 가입된 사용자가 존재하는 경우
         if(user.isPresent()){
-            String nowYmd = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            try {
+                LocalDate recordDate = LocalDate.parse(recordYmd, DateTimeFormatter.BASIC_ISO_DATE);
+                LocalDate nowDate = LocalDate.now();
 
-            //오늘인 경우
-            if(recordYmd.equals(nowYmd)){
-                return getListDefaultRes(user.get());
+                //오늘 또는 이후인 경우
+                if(recordDate.isEqual(nowDate) || recordDate.isAfter(nowDate)){
+                    return getListDefaultRes(user.get());
+                }
+            }catch (Exception e){
+                return DefaultRes.response(HttpStatus.OK.value(), "등록 실패(날짜 형식 오류)");
             }
 
             List<SimpleProductResponse> savingRecordVoList = savingRecordRepositoryCustom.findByUserIdByYmd(user.get(), recordYmd);

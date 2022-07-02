@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +38,13 @@ public class User extends BaseInfo {
     private UserConnection userConnection;
 
     @Builder
-    public User(String email, String password, String nickName, Role role, UserConnection userConnection) {
+    public User(String email, String password, String nickName, Role role, UserConnection userConnection, LocalDateTime localDateTime) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
         this.role = role;
         this.userConnection= userConnection;
+        super.createdAt = localDateTime;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class User extends BaseInfo {
     }
   
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Product> productList = new ArrayList<Product>();
+    private List<Product> productList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private List<SavingRecord> savingList = new ArrayList<>();
