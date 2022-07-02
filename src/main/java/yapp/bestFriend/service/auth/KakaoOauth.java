@@ -23,6 +23,7 @@ import yapp.bestFriend.repository.UserRepository;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -155,11 +156,19 @@ public class KakaoOauth implements SocialOauth {
             user.setUserConnection(userConnection);
             userRepository.save(user);
 
-            return DefaultRes.response(HttpStatus.OK.value(), "등록성공", new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName()));
+            LocalDateTime createAt = getUserCreateTime(email);
+            if(createAt == null){
+                return DefaultRes.response(HttpStatus.OK.value(), "등록실패");
+            }
+
+            return DefaultRes.response(HttpStatus.OK.value(), "등록성공",
+                    new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName(), user.getEmail(), createAt));
 
         }else{
+            //기존유저 수정
             User userInfo = userRepository.findByEmail(email);
             String accessToken = "", refreshToken= "";
+            LocalDateTime createAt = userInfo.getCreatedAt();
             if(userInfo != null) {
                 accessToken = JwtUtil.createAccessToken(userInfo.getId());//신규토큰 생성
                 refreshToken = JwtUtil.createRefreshToken(userInfo.getId());//신규토큰 생성
@@ -171,8 +180,17 @@ public class KakaoOauth implements SocialOauth {
                 userRepository.save(userInfo);
             }
 
-            return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료", new UserSignInResponseDto(accessToken, refreshToken, userInfo.getId(), info.getNickName()));
+            return DefaultRes.response(HttpStatus.OK.value(), "토큰수정완료",
+                    new UserSignInResponseDto(accessToken, refreshToken, userInfo.getId(), info.getNickName(), userInfo.getEmail(), createAt));
         }
+    }
+
+    private LocalDateTime getUserCreateTime(String email) {
+        User createUserInfo = userRepository.findByEmail(email);
+        if(createUserInfo == null) {
+            return null;
+        }
+        return createUserInfo.getCreatedAt();
     }
 
     private User getUserInfo(String email, UserConnection userConnection) {
