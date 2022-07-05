@@ -64,6 +64,7 @@ public class SavingRecordRepositoryCustom {
                 .from(savingRecord)
                 .where(savingRecord.user.id.eq(existingUser.getId()))
                 .where(savingRecord.recordYmd.eq(date))
+                .where(savingRecord.deletedYn.eq(false))//절약 상품은 삭제 여부 검사 하지 않음(추후 삭제가 되도 기록은 남아야 하기 때문)
                 .fetch();
     }
 }

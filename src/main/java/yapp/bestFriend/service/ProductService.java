@@ -50,7 +50,7 @@ public class ProductService {
 
                 //오늘 또는 이후인 경우
                 if(recordDate.isEqual(nowDate) || recordDate.isAfter(nowDate)){
-                    return getListDefaultRes(user.get());
+                    return getListDefaultRes(user.get(), recordYmd);
                 }
             }catch (Exception e){
                 return DefaultRes.response(HttpStatus.OK.value(), "등록 실패(날짜 형식 오류)");
@@ -63,15 +63,19 @@ public class ProductService {
         else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
     }
 
-    private DefaultRes<List<SimpleProductResponse>> getListDefaultRes(User existingUser) {
+    private DefaultRes<List<SimpleProductResponse>> getListDefaultRes(User existingUser, String recordYmd) {
         List<Product> productList = productRepository.findByUserIdAndDeletedYn(existingUser.getId(), false);
 
         if(productList.isEmpty()){
             return DefaultRes.response(HttpStatus.OK.value(), "데이터 없음");
         }
         else{
+            DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate recordDate = LocalDate.parse(recordYmd, inputFormat);
+
             List<SimpleProductResponse> SimpleProductResponseList = productList.stream()
-                    .map(product -> new SimpleProductResponse(product.getId(), product.getName(), product.getPrice(), savingRecordRepositoryCustom.isChecked(existingUser,LocalDate.now(),product), LocalDate.now()))
+                    .map(product -> new SimpleProductResponse(product.getId(), product.getName(), product.getPrice(),
+                            savingRecordRepositoryCustom.isChecked(existingUser, recordDate,product), LocalDate.now()))
                     .collect(Collectors.toList());
 
             return DefaultRes.response(HttpStatus.OK.value(), "조회성공", SimpleProductResponseList);

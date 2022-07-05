@@ -38,4 +38,19 @@ public class AlarmController {
         }
     }
 
+    @ApiOperation(value = "마지막 알람 일시 API",notes = "사용자가 마지막으로 수신 받은 push 알람 일시를 조회합니다.")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "1. 조회 성공 \t\n 2. 조회 실패(사용자 정보 없음)"),
+    })
+    @GetMapping("/alarm/recent-created")
+    public ResponseEntity<DefaultRes> inquiryLastAlarmDt(){
+        DefaultRes defaultRes = alramService.inquiryLastAlarmDt(UserUtil.getId());
+
+        if (defaultRes.getStatusCode() == HttpStatus.UNAUTHORIZED.value()){
+            return new ResponseEntity<>(defaultRes, HttpStatus.UNAUTHORIZED);
+        }else{
+            return new ResponseEntity<>(defaultRes, HttpStatus.OK);
+        }
+    }
+
 }
