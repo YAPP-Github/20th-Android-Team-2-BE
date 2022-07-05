@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.res.SimpleAlarmDto;
+import yapp.bestFriend.model.dto.res.SimpleAlarmOnlyCreateAtDto;
 import yapp.bestFriend.model.entity.PushNotiHistory;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.repository.PushNotiHistoryRepository;
@@ -42,6 +43,27 @@ public class AlramService {
             }
 
             return DefaultRes.response(HttpStatus.OK.value(), "조회성공", pushAlamList);
+        }
+        // 해당 userId로 가입된 사용자가 존재하지 않는 경우
+        else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
+    }
+
+    /**
+     * Search date and time of last sent push notification
+     * @param userId
+     * @return
+     */
+    public DefaultRes inquiryLastAlarmDt(long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        LocalDateTime now = LocalDateTime.now(); // 현재시간
+
+        // 해당 userId로 가입된 사용자가 존재하는 경우
+        if(user.isPresent()){
+            LocalDateTime maxCreatedAtByUserId = pushNotiHistoryRepository.findMaxCreatedAtByUserId(userId);
+            if(maxCreatedAtByUserId!=null){
+                return DefaultRes.response(HttpStatus.OK.value(), "조회성공", new SimpleAlarmOnlyCreateAtDto(maxCreatedAtByUserId));
+            }
+            return DefaultRes.response(HttpStatus.OK.value(), "조회성공", null);
         }
         // 해당 userId로 가입된 사용자가 존재하지 않는 경우
         else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
