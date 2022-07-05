@@ -47,18 +47,17 @@ class SavingRecordRepositoryCustomTest {
     @Autowired EntityManager em;
     JPAQueryFactory queryFactory;
 
+    private User user;
+    private Product prodInput;
+
     @BeforeEach
     public void init() {
         queryFactory = new JPAQueryFactory(em);
         savingRecordRepositoryCustom = new SavingRecordRepositoryCustom(queryFactory);
-    }
 
-    @Test
-    @DisplayName("유저ID, 날짜로 절약 기록 조회")
-    public void findByUserId(){
         //given
         String nickName = "test1";
-        User user = User.builder()
+        user = User.builder()
                 .nickName(nickName)
                 .email("test1@naver.com")
                 .password("123456")
@@ -66,7 +65,7 @@ class SavingRecordRepositoryCustomTest {
         userRepository.save(user);
 
         //given 2 - product 정보
-        Product prodInput = Product.builder().user(user)
+        prodInput = Product.builder().user(user)
                 .name("빙수")
                 .price("8000")
                 .build();
@@ -78,7 +77,11 @@ class SavingRecordRepositoryCustomTest {
                 .user(user)
                 .build();
         savingRecordRepository.save(savingRecord);
+    }
 
+    @Test
+    @DisplayName("유저ID, 날짜로 절약 기록 조회")
+    public void findByUserId(){
         DecimalFormat df = new DecimalFormat("00");
 
         //when
@@ -88,5 +91,25 @@ class SavingRecordRepositoryCustomTest {
         assertThat(result).extracting("productId","name","price").contains(
                 tuple(prodInput.getId(), prodInput.getName(),prodInput.getPrice()
         ));
+    }
+
+    @Test
+    @DisplayName("체크여부 조회 - 체크 정상")
+    public void isChecked(){
+        //when
+        boolean result = savingRecordRepositoryCustom.isChecked(user, LocalDate.now(), prodInput);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("체크여부 조회 - 어제 체크 후, 미래 조회")
+    public void isFutureChecked(){
+        //when
+        boolean result = savingRecordRepositoryCustom.isChecked(user, LocalDate.now().plusDays(1), prodInput);
+
+        //then
+        assertThat(result).isFalse();
     }
 }
