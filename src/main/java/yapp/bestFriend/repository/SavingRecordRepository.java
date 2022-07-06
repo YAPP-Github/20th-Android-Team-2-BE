@@ -31,8 +31,7 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
                     " from SavingRecord A inner join A.product B\n" +
                     "WHERE A.user.id = :userId\n" +
                     "  AND A.recordYmd BETWEEN :from AND :to\n" +
-                    "  AND A.deletedYn = false\n" +
-                    "  AND B.deletedYn = false\n" +
+                    "  AND A.deletedYn = false\n" + //product는 삭제가 되어도 보여야 하므로 false 조건을 걸지 않아야 한다.
                     "GROUP BY substring(A.recordYmd,1,7), A.product.name"
             )
     List<SavingRecordSummaryInterface> selectSummary(@Param(value = "fromDate") String fromDate,
