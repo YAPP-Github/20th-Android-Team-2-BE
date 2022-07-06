@@ -153,6 +153,9 @@ public class KakaoOauth implements SocialOauth {
 
             user.setPassword(accessToken);
             user.setRefreshToken(refreshToken);
+            if(user.isDeletedYn()){//기존에 탈퇴한 유저라면 삭제여부를 false로 업데이트 한다.
+                user.restore();
+            }
             user.setUserConnection(userConnection);
             userRepository.save(user);
 
