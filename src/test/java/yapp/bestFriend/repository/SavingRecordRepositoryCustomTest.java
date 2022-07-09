@@ -75,6 +75,7 @@ class SavingRecordRepositoryCustomTest {
         SavingRecord savingRecord = SavingRecord.builder()
                 .product(prodInput)
                 .user(user)
+                .recordYmd(LocalDate.now())
                 .build();
         savingRecordRepository.save(savingRecord);
     }
