@@ -35,7 +35,7 @@ public class AlramService {
 
         // 해당 userId로 가입된 사용자가 존재하는 경우
         if(user.isPresent()){
-            List<PushNotiHistory> pushNotiHistory = pushNotiHistoryRepository.findByUserIdAndDeletedYn(userId, false);
+            List<PushNotiHistory> pushNotiHistory = pushNotiHistoryRepository.findByUserIdAndDeletedYnOrderByCreatedAtDesc(userId, false);
 
             List<SimpleAlarmDto> pushAlamList = new ArrayList<>();
             for(PushNotiHistory pushNoti: pushNotiHistory){
