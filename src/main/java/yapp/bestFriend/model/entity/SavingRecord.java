@@ -27,7 +27,6 @@ public class SavingRecord extends BaseInfo {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @CreatedDate
     private LocalDate recordYmd;
 
     public void setProduct(Product product) {
