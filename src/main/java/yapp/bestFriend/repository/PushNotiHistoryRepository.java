@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface PushNotiHistoryRepository extends JpaRepository<PushNotiHistory, Long> {
-    List<PushNotiHistory> findByUserIdAndDeletedYn(long userId, Boolean DeletedYn); // where name = ? and ranking = ?
+    List<PushNotiHistory> findByUserIdAndDeletedYnOrderByCreatedAtDesc(long userId, Boolean DeletedYn); // where name = ? and ranking = ?
 
     @Query(value =
             "select max(createdAt) as CreatedAt\n" +
