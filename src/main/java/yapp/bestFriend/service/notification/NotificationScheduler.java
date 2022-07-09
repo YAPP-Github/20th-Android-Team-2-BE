@@ -7,19 +7,19 @@ import com.google.firebase.messaging.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import yapp.bestFriend.model.TokenInfo;
 import yapp.bestFriend.model.entity.PushNotiHistory;
 import yapp.bestFriend.model.enumClass.RequestPushMessage;
 import yapp.bestFriend.service.user.UserFcmTokenService;
 
 import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,8 +50,9 @@ public class NotificationScheduler {
     @PostConstruct // 의존성 주입이 이루어진 후 초기화를 수행하는 메서드
     public void firebaseSetting(){
         try {
+            //ResourceUtils.getFile을 사용하면 classpath:prefix를 사용하는 경우와 사용하지 않는 경우 모두 커버할 수 있음
             GoogleCredentials googleCredentials = GoogleCredentials.fromStream(
-                    new ClassPathResource(FCM_PRIVATE_KEY_PATH).getInputStream())
+                    new FileInputStream(ResourceUtils.getFile(FCM_PRIVATE_KEY_PATH).getAbsolutePath()))
                     .createScoped((List.of(fireBaseScope)))
                     ;
             googleCredentials.getAccessToken();
@@ -139,10 +140,8 @@ public class NotificationScheduler {
                     .replaceFirst("[u]", tokenInfo.getNickName());
 
             Message message = Message.builder()
-                    .setNotification(Notification.builder()
-                            .setTitle(msg.getTitle())
-                            .setBody(customMessage)
-                            .build())
+                    .putData("title", msg.getTitle())
+                    .putData("body", customMessage)
                     .setToken(tokenInfo.getFcmToken())
                     .build();
             messageList.add(message);
