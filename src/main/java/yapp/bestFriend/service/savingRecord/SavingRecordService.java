@@ -46,10 +46,10 @@ public class SavingRecordService {
             if(!product.isPresent()){
                 return DefaultRes.response(HttpStatus.OK.value(), "체크 실패(절약 정보 없음)");
             }
-
             Product existingProduct = product.get();
+            LocalDate requestDate = request.getToday();
 
-            boolean result = savingRecordRepositoryCustom.isChecked(existingUser, LocalDate.now(), existingProduct);
+            boolean result = savingRecordRepositoryCustom.isChecked(existingUser, requestDate, existingProduct);
 
             // 이미 체크 표시가 되어 있는 경우
             if(result){
@@ -57,7 +57,7 @@ public class SavingRecordService {
             }
             else{
                 List<SavingRecord> deletedList = savingRecordRepository.findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn
-                        (LocalDate.now(), existingProduct.getId(), existingUser.getId(), true);
+                        (requestDate, existingProduct.getId(), existingUser.getId(), true);
 
                 //product, 유저, 날짜로 이미 삭제했던 데이터가 있는 경우 true로 업데이트하여 복원
                 if(!deletedList.isEmpty()){
@@ -68,6 +68,7 @@ public class SavingRecordService {
                 SavingRecord savingRecord = SavingRecord.builder()
                         .product(existingProduct)
                         .user(existingUser)
+                        .recordYmd(requestDate)
                         .build();
 
                 savingRecordRepository.save(savingRecord);
