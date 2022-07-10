@@ -28,7 +28,7 @@ public class SavingRecordRepositoryCustom {
                 .where(savingRecord.user.eq(existingUser)
                         .and(savingRecord.product.eq(product))
                         .and(savingRecord.recordYmd.eq(now))
-                        .and(savingRecord.deletedYn.eq(false)))
+                        .and(savingRecord.deletedYn.eq(false)))//절약 상품은 삭제 여부 검사 하지 않음(추후 삭제가 되도 기록은 남아야 하기 때문)
                 .fetchFirst();
 
         return fetchOne != null;
@@ -45,6 +45,7 @@ public class SavingRecordRepositoryCustom {
                 .from(savingRecord)
                 .where(savingRecord.user.id.eq(existingUser.getId()))
                 .where(savingRecord.recordYmd.yearMonth().eq(Integer.valueOf(nowYyyyMm)))
+                .where(savingRecord.deletedYn.eq(false))//절약 상품은 삭제 여부 검사 하지 않음(추후 삭제가 되도 기록은 남아야 하기 때문)
                 .fetch();
     }
 
