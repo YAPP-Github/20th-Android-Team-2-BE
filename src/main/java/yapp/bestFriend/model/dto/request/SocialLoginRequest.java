@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yapp.bestFriend.model.enumClass.SocialLoginType;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,8 +16,12 @@ import javax.validation.constraints.NotNull;
 public class SocialLoginRequest {
 
     @NotNull
+    @ApiModelProperty(value = "사용자의 SNS TYPE", example = "KAKAO")
+    private SocialLoginType provider;
+
+    @NotNull
     @ApiModelProperty(value = "사용자의 SNS 고유 ID", example = "2242469369")
-    private Long providerId;
+    private String providerId;
 
     @NotNull
     @ApiModelProperty(value = "사용자의 SNS email 주소", example = "test@naver.com")
