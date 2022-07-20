@@ -24,7 +24,7 @@ public class UserConnection extends BaseInfo {
     private SocialLoginType provider;
 
     @Column(name = "provider_id")
-    private Long providerId;
+    private String providerId;
 
     @Column(name = "nick_name")
     private String nickName;
@@ -37,7 +37,7 @@ public class UserConnection extends BaseInfo {
     }
 
     @Builder
-    private UserConnection(String email, SocialLoginType provider, Long providerId, String nickName, String accessToken) {
+    private UserConnection(String email, SocialLoginType provider, String providerId, String nickName, String accessToken) {
         this.email = email;
         this.provider = provider;
         this.providerId = providerId;

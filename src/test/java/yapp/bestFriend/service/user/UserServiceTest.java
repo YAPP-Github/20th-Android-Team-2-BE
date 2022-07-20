@@ -50,7 +50,7 @@ class UserServiceTest {
         UserConnection userConnectionInfo = UserConnection.builder()
                 .email("test@naver.com")
                 .provider(SocialLoginType.KAKAO)
-                .providerId(123456789L)
+                .providerId("123456789")
                 .nickName("best friend")
                 .accessToken("accessToken")
                 .build();
