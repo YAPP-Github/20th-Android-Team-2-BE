@@ -40,21 +40,24 @@ class KakaoOauthTest {
     @DisplayName("로그아웃한 사용자 로그인 시")
     void requestLogin() {
         //given
-        SocialLoginRequest socialLoginRequest = SocialLoginRequest
-                .builder().providerId(1L)
+        SocialLoginRequest socialLoginRequest = SocialLoginRequest.builder()
+                .providerId("123456789")
+                .provider(SocialLoginType.KAKAO)
                 .email("test@naver.com")
                 .nickName("best friend").build();
 
         UserConnection userConnectionInfo = UserConnection.builder()
                 .email("test@naver.com")
                 .provider(SocialLoginType.KAKAO)
-                .providerId(123456789L)
+                .providerId("123456789")
                 .nickName("best friend")
                 .accessToken("accessToken")
                 .build();
 
         User user = User.builder()
                 .email("test@naver.com")
+                .provider(SocialLoginType.KAKAO)
+                .providerId("123456789")
                 .password("123456")
                 .nickName("best friend")
                 .role(Role.USER)
@@ -65,7 +68,7 @@ class KakaoOauthTest {
         //when
         when(userConnectionRepository.findById(any())).thenReturn(null);
         when(userConnectionRepository.save(any())).thenReturn(userConnectionInfo);
-        when(userRepository.findByEmail("test@naver.com")).thenReturn(user);
+        when(userRepository.findByEmailAndProviderAndProviderId(user.getEmail(), user.getProvider(), user.getProviderId())).thenReturn(user);
         when(userRepository.save(any())).thenReturn(user);
 
         try (MockedStatic<JwtUtil> mockedStatic = mockStatic(JwtUtil.class)) {
