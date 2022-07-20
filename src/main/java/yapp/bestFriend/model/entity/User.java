@@ -3,6 +3,7 @@ package yapp.bestFriend.model.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yapp.bestFriend.model.enumClass.SocialLoginType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,7 +15,9 @@ import java.util.List;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(name = "UniqueEmail", columnNames = {"email"})
+                @UniqueConstraint(
+                        name = "UniqueEmail",
+                        columnNames = {"email","provider","provider_id"})
         })
 public class User extends BaseInfo {
     @Id //pk
@@ -28,6 +31,13 @@ public class User extends BaseInfo {
 
     private String nickName;
 
+    @Column(name = "provider")
+    @Enumerated(EnumType.STRING)
+    private SocialLoginType provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
     @Enumerated(EnumType.STRING)//DB로 저장할 떄 Enum 값을 어떤 형태로 저장할지 결정
     private Role role;
 
@@ -38,10 +48,13 @@ public class User extends BaseInfo {
     private UserConnection userConnection;
 
     @Builder
-    public User(String email, String password, String nickName, Role role, UserConnection userConnection, LocalDateTime localDateTime) {
+    public User(String email, String password, String nickName,
+                SocialLoginType provider, String providerId, Role role, UserConnection userConnection, LocalDateTime localDateTime) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
+        this.provider = provider;
+        this.providerId = providerId;
         this.role = role;
         this.userConnection= userConnection;
         super.createdAt = localDateTime;
