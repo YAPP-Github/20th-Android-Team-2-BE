@@ -126,9 +126,10 @@ public class KakaoOauth implements SocialOauth {
         //사용자에게 받은 body 변수로 쪼개기
         String email = request.getEmail();
         String nickName = request.getNickName();
-        Long id = request.getProviderId();
+        SocialLoginType provider = request.getProvider();
+        String id = request.getProviderId();
 
-        UserConnection info = userConnectionRepository.findByEmail(email);
+        UserConnection info = userConnectionRepository.findByEmailAndProviderAndProviderId(email, provider, id);
 
         if(info == null) {
 
@@ -136,13 +137,13 @@ public class KakaoOauth implements SocialOauth {
                     UserConnection.builder()
                             .email(email)
                             .nickName(nickName)
-                            .provider(SocialLoginType.KAKAO)
+                            .provider(provider)
                             .providerId(id)
                             .build();
 
             userConnection = userConnectionRepository.save(userConnection);
 
-            User user = getUserInfo(email, userConnection);
+            User user = getUserInfo(email, provider, id, userConnection);
 
             //신규토큰 생성
             String accessToken = JwtUtil.createAccessToken(user.getId());
@@ -159,7 +160,7 @@ public class KakaoOauth implements SocialOauth {
             user.setUserConnection(userConnection);
             userRepository.save(user);
 
-            LocalDateTime createAt = getUserCreateTime(email);
+            LocalDateTime createAt = getUserCreateTime(email, provider, id);
             if(createAt == null){
                 return DefaultRes.response(HttpStatus.OK.value(), "등록실패");
             }
@@ -169,7 +170,7 @@ public class KakaoOauth implements SocialOauth {
 
         }else{
             //기존유저 수정
-            User userInfo = userRepository.findByEmail(email);
+            User userInfo = userRepository.findByEmailAndProviderAndProviderId(email, provider, id);
             String accessToken = "", refreshToken= "";
             LocalDateTime createAt = userInfo.getCreatedAt();
             if(userInfo != null) {
@@ -188,25 +189,25 @@ public class KakaoOauth implements SocialOauth {
         }
     }
 
-    private LocalDateTime getUserCreateTime(String email) {
-        User createUserInfo = userRepository.findByEmail(email);
+    private LocalDateTime getUserCreateTime(String email, SocialLoginType provider, String id) {
+        User createUserInfo = userRepository.findByEmailAndProviderAndProviderId(email, provider, id);
         if(createUserInfo == null) {
             return null;
         }
         return createUserInfo.getCreatedAt();
     }
 
-    private User getUserInfo(String email, UserConnection userConnection) {
-        User user;
-        if(userRepository.findByEmail(email) == null) {
+    private User getUserInfo(String email, SocialLoginType provider, String id, UserConnection userConnection) {
+        User user = userRepository.findByEmailAndProviderAndProviderId(email, provider, id);
+        if(user == null) {
             user = User.builder()
                     .email(userConnection.getEmail())
                     .nickName(userConnection.getNickName())
                     .userConnection(userConnection)
                     .role(Role.USER)
+                    .provider(provider)
+                    .providerId(id)
                     .build();
-        }else{
-            user = userRepository.findByEmail(email);
         }
 
         userRepository.save(user);
