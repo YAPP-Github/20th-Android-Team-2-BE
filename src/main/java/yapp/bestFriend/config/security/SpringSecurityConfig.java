@@ -38,6 +38,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().configurationSource(source()).and()
                 .authorizeHttpRequests() //인가에 대한 설정
                 .antMatchers("/api/oauth/**").permitAll()
+                .antMatchers("/api/user/signup/**").permitAll()
+                .antMatchers("/api/user/signin/**").permitAll()
                 .antMatchers("/api/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll() // swagger 관련 리소스 시큐리티 필터 제거
