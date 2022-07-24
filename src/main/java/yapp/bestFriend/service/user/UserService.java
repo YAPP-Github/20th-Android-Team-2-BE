@@ -5,13 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yapp.bestFriend.model.dto.DefaultRes;
+import yapp.bestFriend.model.dto.request.user.UserSignUpRequestDto;
+import yapp.bestFriend.model.dto.res.user.UserSignInResponseDto;
 import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.SavingRecord;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.model.entity.UserFcmToken;
+import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.*;
 import yapp.bestFriend.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,4 +100,39 @@ public class UserService {
         userRepository.save(existingUser);
     }
 
+    public DefaultRes signUp(UserSignUpRequestDto requestDto){
+
+        String email = requestDto.getEmail();
+        Optional<String> optionalEmail = userRepository.findFirstByEmail(email);
+
+        return optionalEmail
+                .map(e -> DefaultRes.response(HttpStatus.OK.value(), "이메일중복"))
+                .orElseGet(()->{
+                    userRepository.save(requestDto.toEntity());
+                    return DefaultRes.response(HttpStatus.OK.value(),"성공");
+                });
+    }
+
+    @Transactional
+    public DefaultRes<UserSignInResponseDto> signIn(UserSignUpRequestDto requestDto){
+
+        Optional<String> optionalEmail = userRepository.findFirstByEmail(requestDto.getEmail());
+
+        return optionalEmail.map(email ->{
+
+            Optional<User> optionalUser = userRepository.findByUser(email, requestDto.getPassword());
+
+            return optionalUser.map(user -> {
+                String accessToken = JwtUtil.createAccessToken(user.getId());
+                String refreshToken = JwtUtil.createRefreshToken(user.getId());
+                user.setRefreshToken(refreshToken);
+
+                return DefaultRes.response(HttpStatus.OK.value(), "등록성공",
+                        new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName(), user.getEmail(), user.getCreatedAt()));
+
+            }).orElseGet(()-> DefaultRes.response(HttpStatus.OK.value(), "비밀번호불일치"));
+
+        }).orElseGet(()->DefaultRes.response(HttpStatus.OK.value(), "아이디불일치"));
+
+    }
 }
