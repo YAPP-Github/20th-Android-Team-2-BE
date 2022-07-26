@@ -7,15 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.user.UserSignUpRequestDto;
 import yapp.bestFriend.model.dto.res.user.UserSignInResponseDto;
-import yapp.bestFriend.model.entity.Product;
-import yapp.bestFriend.model.entity.SavingRecord;
-import yapp.bestFriend.model.entity.User;
-import yapp.bestFriend.model.entity.UserFcmToken;
+import yapp.bestFriend.model.entity.*;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.*;
-import yapp.bestFriend.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,6 +121,15 @@ public class UserService {
                 String accessToken = JwtUtil.createAccessToken(user.getId());
                 String refreshToken = JwtUtil.createRefreshToken(user.getId());
                 user.setRefreshToken(refreshToken);
+
+                UserConnection userConnection =
+                        UserConnection.builder()
+                                .email(email)
+                                .accessToken(accessToken)
+                                .build();
+
+                userConnection = userConnectionRepository.save(userConnection);
+                user.setUserConnection(userConnection);
 
                 return DefaultRes.response(HttpStatus.OK.value(), "등록성공",
                         new UserSignInResponseDto(accessToken, refreshToken, user.getId(), user.getNickName(), user.getEmail(), user.getCreatedAt()));
