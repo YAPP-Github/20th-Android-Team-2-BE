@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.alarm;
+package yapp.bestFriend.service.v1.alarm;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

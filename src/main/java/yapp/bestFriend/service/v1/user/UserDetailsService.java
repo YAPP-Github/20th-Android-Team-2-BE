@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.user;
+package yapp.bestFriend.service.v1.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class UserDetailsService implements org.springframework.security.core.use
             throw new UsernameNotFoundException("404 - User Not Found");
         }
 
-        return new yapp.bestFriend.service.user.UserDetails(user.get());
+        return new yapp.bestFriend.service.v1.user.UserDetails(user.get());
     }
 
 }

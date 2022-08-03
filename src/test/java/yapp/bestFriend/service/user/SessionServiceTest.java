@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import yapp.bestFriend.repository.UserRepository;
+import yapp.bestFriend.service.v1.user.SessionService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

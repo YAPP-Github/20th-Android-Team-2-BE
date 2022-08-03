@@ -13,12 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import yapp.bestFriend.controller.api.v1.token.ReplaceTokenController;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.res.ReplaceTokenResponseDto;
 import yapp.bestFriend.model.utils.JwtUtil;
-import yapp.bestFriend.service.user.SessionService;
-import yapp.bestFriend.service.user.UserDetailsService;
-import yapp.bestFriend.service.user.UserFcmTokenService;
+import yapp.bestFriend.service.v1.user.SessionService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
+import yapp.bestFriend.service.v1.user.UserFcmTokenService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

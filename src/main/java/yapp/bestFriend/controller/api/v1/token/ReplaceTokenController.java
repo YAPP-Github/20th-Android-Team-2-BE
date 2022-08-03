@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.token;
+package yapp.bestFriend.controller.api.v1.token;
 
 
 import io.swagger.annotations.Api;
@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.FmcRegisterRequest;
-import yapp.bestFriend.service.user.SessionService;
-import yapp.bestFriend.service.user.UserFcmTokenService;
+import yapp.bestFriend.service.v1.user.SessionService;
+import yapp.bestFriend.service.v1.user.UserFcmTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

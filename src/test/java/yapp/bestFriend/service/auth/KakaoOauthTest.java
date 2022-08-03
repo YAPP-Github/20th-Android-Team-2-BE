@@ -16,6 +16,7 @@ import yapp.bestFriend.model.enumClass.SocialLoginType;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.UserConnectionRepository;
 import yapp.bestFriend.repository.UserRepository;
+import yapp.bestFriend.service.v1.auth.KakaoOauth;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.auth;
+package yapp.bestFriend.service.v1.auth;
 
 import yapp.bestFriend.model.enumClass.SocialLoginType;
 

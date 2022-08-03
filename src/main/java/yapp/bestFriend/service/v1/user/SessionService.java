@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.user;
+package yapp.bestFriend.service.v1.user;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

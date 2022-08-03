@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.user;
+package yapp.bestFriend.service.v1.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

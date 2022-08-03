@@ -10,11 +10,12 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import yapp.bestFriend.controller.api.v1.auth.OauthController;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.enumClass.SocialLoginType;
 import yapp.bestFriend.model.utils.JwtUtil;
-import yapp.bestFriend.service.auth.OauthService;
-import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.v1.auth.OauthService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

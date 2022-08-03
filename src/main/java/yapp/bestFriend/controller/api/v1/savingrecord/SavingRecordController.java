@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.savingrecord;
+package yapp.bestFriend.controller.api.v1.savingrecord;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import yapp.bestFriend.model.dto.request.CheckProductRequest;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
 import yapp.bestFriend.model.dto.res.SavingRecordSummaryDto;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.savingRecord.SavingRecordService;
+import yapp.bestFriend.service.v1.savingRecord.SavingRecordService;
 
 import javax.validation.Valid;
 import java.util.List;

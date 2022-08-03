@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import yapp.bestFriend.model.utils.JwtUtil;
-import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;

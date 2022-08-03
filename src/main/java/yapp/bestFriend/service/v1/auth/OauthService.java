@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.auth;
+package yapp.bestFriend.service.v1.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -5,7 +5,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import yapp.bestFriend.service.user.UserDetails;
+import yapp.bestFriend.service.v1.user.UserDetails;
 
 import java.util.Optional;
 

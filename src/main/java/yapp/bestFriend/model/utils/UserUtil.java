@@ -3,7 +3,7 @@ package yapp.bestFriend.model.utils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import yapp.bestFriend.model.entity.User;
-import yapp.bestFriend.service.user.UserDetails;
+import yapp.bestFriend.service.v1.user.UserDetails;
 
 public class UserUtil {
 

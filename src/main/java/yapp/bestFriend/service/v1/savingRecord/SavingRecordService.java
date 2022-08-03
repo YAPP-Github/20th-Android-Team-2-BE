@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.savingRecord;
+package yapp.bestFriend.service.v1.savingRecord;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -198,4 +198,7 @@ public class SavingRecordService {
 
         return dtFormat.format(cal.getTime());
     }
+
+    /************************ version 1.1 *************************/
+
 }

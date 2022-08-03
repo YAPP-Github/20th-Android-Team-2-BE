@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import yapp.bestFriend.controller.api.v1.savingrecord.SavingRecordController;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.CheckProductRequest;
 import yapp.bestFriend.model.dto.res.SavingRecordDto;
@@ -25,8 +26,8 @@ import yapp.bestFriend.model.entity.Role;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.savingRecord.SavingRecordService;
-import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.v1.savingRecord.SavingRecordService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
 
 import java.time.LocalDate;
 import java.util.Arrays;

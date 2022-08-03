@@ -17,6 +17,7 @@ import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.repository.UserConnectionRepository;
 import yapp.bestFriend.repository.UserFcmTokenRepository;
 import yapp.bestFriend.repository.UserRepository;
+import yapp.bestFriend.service.v1.user.UserService;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.user;
+package yapp.bestFriend.service.v1.user;
 
 import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;

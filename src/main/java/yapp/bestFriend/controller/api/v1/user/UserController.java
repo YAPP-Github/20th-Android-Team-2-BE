@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.user;
+package yapp.bestFriend.controller.api.v1.user;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.user.UserSignUpRequestDto;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.user.UserService;
+import yapp.bestFriend.service.v1.user.UserService;
 
 import javax.validation.Valid;
 

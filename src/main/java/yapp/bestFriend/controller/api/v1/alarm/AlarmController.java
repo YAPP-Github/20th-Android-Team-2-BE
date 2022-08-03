@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.alarm;
+package yapp.bestFriend.controller.api.v1.alarm;
 
 
 import io.swagger.annotations.Api;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.alarm.AlramService;
+import yapp.bestFriend.service.v1.alarm.AlramService;
 
 @Api(tags = {"알람 관련 API"})
 @RestController

@@ -15,7 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import yapp.bestFriend.config.filter.JwtRequestFilter;
-import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
 
 @Configuration
 @EnableWebSecurity //Spring Security 설정 활성화

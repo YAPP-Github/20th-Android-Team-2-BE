@@ -11,6 +11,7 @@ import yapp.bestFriend.model.entity.Product;
 import yapp.bestFriend.model.entity.User;
 import yapp.bestFriend.repository.ProductRepository;
 import yapp.bestFriend.repository.UserRepository;
+import yapp.bestFriend.service.v1.ProductService;
 
 import java.util.Optional;
 

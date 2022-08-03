@@ -15,11 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import yapp.bestFriend.controller.api.product.ProductController;
+import yapp.bestFriend.controller.api.v1.product.ProductController;
 import yapp.bestFriend.model.utils.JwtUtil;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.ProductService;
-import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.v1.ProductService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;

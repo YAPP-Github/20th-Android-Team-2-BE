@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.enumClass.SocialLoginType;
+import yapp.bestFriend.service.v1.auth.OauthService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

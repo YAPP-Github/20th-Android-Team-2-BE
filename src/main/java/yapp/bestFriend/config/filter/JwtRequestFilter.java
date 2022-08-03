@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import yapp.bestFriend.model.utils.JwtUtil;
-import yapp.bestFriend.service.user.UserDetailsService;
+import yapp.bestFriend.service.v1.user.UserDetailsService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -75,7 +75,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = getUserDetails(request, response, userId);
             if(userDetails == null) return true;
-            if(jwtTokenUtil.validateToken(jwtToken, (yapp.bestFriend.service.user.UserDetails) userDetails)) {
+            if(jwtTokenUtil.validateToken(jwtToken, (yapp.bestFriend.service.v1.user.UserDetails) userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

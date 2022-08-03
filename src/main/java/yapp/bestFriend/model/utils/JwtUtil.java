@@ -3,7 +3,7 @@ package yapp.bestFriend.model.utils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import yapp.bestFriend.model.entity.Role;
-import yapp.bestFriend.service.user.UserDetails;
+import yapp.bestFriend.service.v1.user.UserDetails;
 
 import java.security.Key;
 import java.util.Date;

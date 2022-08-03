@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.product;
+package yapp.bestFriend.controller.api.v1.product;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import yapp.bestFriend.model.dto.request.CreateProductRequest;
 import yapp.bestFriend.model.dto.request.UpdateProductRequest;
 import yapp.bestFriend.model.dto.res.SimpleProductResponse;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.ProductService;
+import yapp.bestFriend.service.v1.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.notification;
+package yapp.bestFriend.service.v1.notification;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -13,7 +13,7 @@ import org.springframework.util.ResourceUtils;
 import yapp.bestFriend.model.TokenInfo;
 import yapp.bestFriend.model.entity.PushNotiHistory;
 import yapp.bestFriend.model.enumClass.RequestPushMessage;
-import yapp.bestFriend.service.user.UserFcmTokenService;
+import yapp.bestFriend.service.v1.user.UserFcmTokenService;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;

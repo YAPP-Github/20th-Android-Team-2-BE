@@ -1,4 +1,4 @@
-package yapp.bestFriend.controller.api.auth;
+package yapp.bestFriend.controller.api.v1.auth;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.SocialLoginRequest;
 import yapp.bestFriend.model.enumClass.SocialLoginType;
-import yapp.bestFriend.service.auth.OauthService;
+import yapp.bestFriend.service.v1.auth.OauthService;
 
 import javax.validation.Valid;
 
