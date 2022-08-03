@@ -24,7 +24,17 @@ public class Product extends BaseInfo {
     @Column(name = "product_name")
     private String name;
 
-    private String price;
+    private String price;//version 1에서만 사용
+
+    //version2 추가 시작
+    private String startYmd;
+
+    private String endYmd;
+
+    private String freqType;
+
+    private String freqInterval;
+    //version2 추가 종료
 
     @Override
     public String toString() {
@@ -38,10 +48,14 @@ public class Product extends BaseInfo {
     }
 
     @Builder
-    public Product(User user, String name, String price){
+    public Product(User user, String name, String price, String startYmd, String endYmd, String freqType, String freqInterval) {
         this.user = user;
         this.name = name;
         this.price = price;
+        this.startYmd = startYmd;
+        this.endYmd = endYmd;
+        this.freqType = freqType;
+        this.freqInterval = freqInterval;
     }
 
     public Product updateBoard(UpdateProductRequest request) {
