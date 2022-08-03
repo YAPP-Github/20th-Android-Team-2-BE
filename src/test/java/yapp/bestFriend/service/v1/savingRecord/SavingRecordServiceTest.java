@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.savingRecord;
+package yapp.bestFriend.service.v1.savingRecord;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +17,6 @@ import yapp.bestFriend.repository.ProductRepository;
 import yapp.bestFriend.repository.SavingRecordRepository;
 import yapp.bestFriend.repository.SavingRecordRepositoryCustom;
 import yapp.bestFriend.repository.UserRepository;
-import yapp.bestFriend.service.v1.savingRecord.SavingRecordService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -193,5 +192,4 @@ class SavingRecordServiceTest {
                 .hasFieldOrPropertyWithValue("statusCode", HttpStatus.OK.value())
                 .hasFieldOrPropertyWithValue("Message","조회실패(기록일자 파라미터 오류)");
     }
-
 }
