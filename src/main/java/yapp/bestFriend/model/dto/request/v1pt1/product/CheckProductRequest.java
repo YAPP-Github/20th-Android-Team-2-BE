@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -15,11 +16,11 @@ import java.time.LocalDate;
 @Builder
 public class CheckProductRequest {
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "절약 항목 ID")
     private Long productId;
 
-    @NotBlank
+    @NotNull
     @ApiModelProperty(value = "기준 일시")
     private LocalDate requestYmd;
 
