@@ -3,8 +3,8 @@ package yapp.bestFriend.model.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import yapp.bestFriend.model.dto.request.v1pt1.product.UpdateSavingRecordsRequest;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -29,6 +29,9 @@ public class SavingRecord extends BaseInfo {
 
     private LocalDate recordYmd;
 
+    //절약금액
+    private String savings;
+
     public void setProduct(Product product) {
         this.product = product;
     }
@@ -38,9 +41,15 @@ public class SavingRecord extends BaseInfo {
     }
 
     @Builder
-    public SavingRecord(Product product, User user, LocalDate recordYmd){
+    public SavingRecord(Product product, User user, LocalDate recordYmd, String savings){
         this.product = product;
         this.user = user;
         this.recordYmd= recordYmd;
+        this.savings = savings;
+    }
+
+    public SavingRecord updateSavings(UpdateSavingRecordsRequest request) {
+        this.savings = request.getPrice();
+        return this;
     }
 }
