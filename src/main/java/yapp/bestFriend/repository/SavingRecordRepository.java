@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import yapp.bestFriend.model.dto.res.SavingRecordSummaryInterface;
+import yapp.bestFriend.model.dvo.SavingRecordWithProductInterface;
 import yapp.bestFriend.model.entity.SavingRecord;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long> {
@@ -42,5 +44,35 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
 
     List<SavingRecord> findSavingRecordsByRecordYmdAndProductIdAndUserIdAndDeletedYn(LocalDate recordYmd, Long productId, Long userId, Boolean DeletedYn); // where name = ? and ranking = ?
 
-    List<SavingRecord> findByUserIdAndDeletedYn(long userId, boolean deletedYn);
+    List<SavingRecord> findByUserIdAndDeletedYn(Long userId, Boolean deletedYn);
+
+    Optional<SavingRecord> findByUserIdAndRecordYmdAndProductId(Long userId, LocalDate recordYmd, Long productId);
+
+    @Query(value =
+            "    SELECT B.id as productId,\n" +
+                    "           B.name as name,\n" +
+                    "           SUM(CASE WHEN substring(A.recordYmd,1,10) = :recordYmd THEN A.savings ELSE 0 END) AS price,\n" +
+                    "           count(*) AS accmTimes,\n" +
+                    "       case when B.freqType = 1 then (1-count(*))\n" +
+                    "            WHEN B.freqType = 2 THEN\n" +
+                    "                ((select count(*)\n" +
+                    "                 from Calendar \n" +
+                    "                 where DE between B.startYmd and B.endYmd) - count(*))\n" +
+                    "            else ((select count(*)\n" +
+                    "                     from Calendar \n" +
+                    "                    where DE between B.startYmd and B.endYmd\n" +
+                    "                      and DAY_NUM IN (:intervalList)) - count(*))\n" +
+                    "           end AS remainingTimes\n" +
+                    "    FROM SavingRecord A inner join Product B\n" +
+                    "      on A.user.id = B.user.id\n" +
+                    "       AND A.product.id = B.id\n" +
+                    "     where 1=1" +
+                    "AND A.user.id = :userId\n" +
+                    "AND A.product.id in (:productId)\n" +
+                    "       AND A.recordYmd between B.startYmd AND B.endYmd\n" +
+                    "       and substring(A.recordYmd,1,10) <= :recordYmd\n" +
+                    "       AND A.deletedYn = false\n" +
+                    "       AND B.deletedYn = false\n" +
+                    "    group by B.id, B.name")
+    SavingRecordWithProductInterface searchProductListWithSavingRecord(Long userId, String recordYmd, Long productId, List<String> intervalList);
 }
