@@ -199,6 +199,4 @@ public class SavingRecordService {
         return dtFormat.format(cal.getTime());
     }
 
-    /************************ version 1.1 *************************/
-
 }
