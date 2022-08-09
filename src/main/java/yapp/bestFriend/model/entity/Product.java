@@ -64,4 +64,14 @@ public class Product extends BaseInfo {
 
         return this;
     }
+
+    public Product updateBoard(yapp.bestFriend.model.dto.request.v1pt1.product.UpdateProductRequest request) {
+        this.name = request.getName();
+        this.price = request.getFreqType();
+        this.freqInterval = request.getFreqInterval();
+        this.startYmd = request.getStartYmd();
+        this.endYmd = request.getEndYmd();
+
+        return this;
+    }
 }
