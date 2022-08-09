@@ -34,7 +34,7 @@ public class CreateProductRequest {
     private String startYmd;
 
     @NotBlank
-    @ApiModelProperty(value = "시작 일시")
+    @ApiModelProperty(value = "종료 일시")
     private String endYmd;
 
     public Product toEntity(User user) {
