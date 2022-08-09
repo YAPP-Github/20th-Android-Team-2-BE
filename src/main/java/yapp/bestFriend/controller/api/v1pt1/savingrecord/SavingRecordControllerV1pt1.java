@@ -12,7 +12,7 @@ import yapp.bestFriend.model.dto.DefaultRes;
 import yapp.bestFriend.model.dto.request.v1pt1.product.CheckProductRequest;
 import yapp.bestFriend.model.dto.request.v1pt1.product.UpdateSavingRecordsRequest;
 import yapp.bestFriend.model.utils.UserUtil;
-import yapp.bestFriend.service.v1pt1.savingRecord.SavingRecordServiceV1pt1;
+import yapp.bestFriend.service.v1pt1.savingrecord.SavingRecordServiceV1pt1;
 
 import javax.validation.Valid;
 

@@ -1,4 +1,4 @@
-package yapp.bestFriend.service.v1pt1.savingRecord;
+package yapp.bestFriend.service.v1pt1.savingrecord;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
