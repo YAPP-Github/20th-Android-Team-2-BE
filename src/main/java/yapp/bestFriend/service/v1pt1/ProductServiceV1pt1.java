@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import yapp.bestFriend.model.dto.DefaultRes;
+import yapp.bestFriend.model.dto.request.v1pt1.product.UpdateProductRequest;
 import yapp.bestFriend.model.dto.res.SimpleProductResponse;
 import yapp.bestFriend.model.dvo.SavingRecordWithProductInterface;
 import yapp.bestFriend.model.entity.Product;
@@ -78,5 +79,29 @@ public class ProductServiceV1pt1 {
             return DefaultRes.response(HttpStatus.OK.value(), "등록 성공");
         }
         else return DefaultRes.response(HttpStatus.OK.value(), "등록 실패(사용자 정보 없음)");
+    }
+
+    /**
+     * 절약 항목을 수정
+     * @param request 절약 항목 수정 요청
+     * @return
+     */
+    public DefaultRes updateProduct(Long userId, UpdateProductRequest request) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isPresent()){
+            Optional<Product> product = productRepository.findById(request.getProductId());
+
+            if(product.isPresent()){
+                Product updatedProduct = product.get().updateBoard(request);
+                productRepository.save(updatedProduct);
+
+                return DefaultRes.response(HttpStatus.OK.value(), "수정 성공");
+            }
+
+            else return DefaultRes.response(HttpStatus.OK.value(), "수정 실패(절약 정보 없음)");
+        }
+
+        else return DefaultRes.response(HttpStatus.OK.value(), "수정 실패(사용자 정보 없음)");
     }
 }
